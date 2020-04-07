@@ -1,15 +1,12 @@
-#预测时画框工具
+# 预测时画框工具
 import torch
 import numpy as np
 from PIL import Image
+
+
 def point_form(boxes):
-    return torch.cat((boxes[:, :2] - boxes[:, 2:]/2,     # xmin, ymin
-                     boxes[:, :2] + boxes[:, 2:]/2), 1)  # xmax, ymax
-
-
-def center_size(boxes):
-    return torch.cat((boxes[:, 2:] + boxes[:, :2])/2,  # cx, cy
-                     boxes[:, 2:] - boxes[:, :2], 1)  # w, h
+    return torch.cat((boxes[:, :2] - boxes[:, 2:] / 2,  # xmin, ymin
+                      boxes[:, :2] + boxes[:, 2:] / 2), 1)  # xmax, ymax
 
 
 def intersect(box_a, box_b):
@@ -27,10 +24,10 @@ def intersect(box_a, box_b):
 def jaccard(box_a, box_b):
     inter = intersect(box_a, box_b)
     # 计算先验框和真实框各自的面积
-    area_a = ((box_a[:, 2]-box_a[:, 0]) *
-              (box_a[:, 3]-box_a[:, 1])).unsqueeze(1).expand_as(inter)  # [A,B]
-    area_b = ((box_b[:, 2]-box_b[:, 0]) *
-              (box_b[:, 3]-box_b[:, 1])).unsqueeze(0).expand_as(inter)  # [A,B]
+    area_a = ((box_a[:, 2] - box_a[:, 0]) *
+              (box_a[:, 3] - box_a[:, 1])).unsqueeze(1).expand_as(inter)  # [A,B]
+    area_b = ((box_b[:, 2] - box_b[:, 0]) *
+              (box_b[:, 3] - box_b[:, 1])).unsqueeze(0).expand_as(inter)  # [A,B]
     # 求IOU
     union = area_a + area_b - inter
     return inter / union  # [A,B]
@@ -38,7 +35,7 @@ def jaccard(box_a, box_b):
 
 def match(threshold, truths, priors, variances, labels, loc_t, conf_t, idx):
     # 计算所有的先验框和真实框的重合程度
-    # [truth_box真实框,num_prior先验框]
+    # [truth_box真实框,num_prior先验框] 相当于向量计算后坐标，用于匹配相似度
     overlaps = jaccard(
         truths,
         point_form(priors)
@@ -59,38 +56,40 @@ def match(threshold, truths, priors, variances, labels, loc_t, conf_t, idx):
     # 对best_truth_idx内容进行设置
     for j in range(best_prior_idx.size(0)):
         best_truth_idx[best_prior_idx[j]] = j
-    
+
     # 找到每个先验框重合程度最好的真实框
-    matches = truths[best_truth_idx]          # Shape: [num_priors,4]
-    conf = labels[best_truth_idx] + 1         # Shape: [num_priors]
+    matches = truths[best_truth_idx]  # Shape: [num_priors,4]
+    conf = labels[best_truth_idx] + 1  # Shape: [num_priors]
     # 如果重合程度小于threhold则认为是背景
-    conf[best_truth_overlap < threshold] = 0  # label as background threshold阈值判断是否为背景
+    conf[best_truth_overlap < threshold] = 0  # 阈值判断是否为背景
     loc = encode(matches, priors, variances)
-    loc_t[idx] = loc    # [num_priors,4] encoded offsets to learn
-    conf_t[idx] = conf  # [num_priors] top class label for each prior
+    loc_t[idx] = loc  # [num_priors,4]
+    conf_t[idx] = conf  # [num_priors]
 
 
-def encode(matched, priors, variances):# 编码
-    g_cxcy = (matched[:, :2] + matched[:, 2:])/2 - priors[:, :2]
+def encode(matched, priors, variances):  # 编码 调整最优先验框与真实框重合
+    g_cxcy = (matched[:, :2] + matched[:, 2:]) / 2 - priors[:, :2]
     g_cxcy /= (variances[0] * priors[:, 2:])
     g_wh = (matched[:, 2:] - matched[:, :2]) / priors[:, 2:]
     g_wh = torch.log(g_wh) / variances[1]
-    return torch.cat([g_cxcy, g_wh], 1) 
+    return torch.cat([g_cxcy, g_wh], 1)
 
-# Adapted from https://github.com/Hakuyume/chainer-ssd
-def decode(loc, priors, variances):# 解码
+
+
+def decode(loc, priors, variances):  # 解码
     boxes = torch.cat((
-        priors[:, :2] + loc[:, :2] * variances[0] * priors[:, 2:],#计算先验框调整后中心位置 variances【0】=0.1起标准化过程
-        priors[:, 2:] * torch.exp(loc[:, 2:] * variances[1])), 1)#计算先验框调整后宽和高variances【1】=0.2
-
-    boxes[:, :2] -= boxes[:, 2:] / 2#计算左上角
-    boxes[:, 2:] += boxes[:, :2]#计算右下角
+        # 计算先验框调整后中心位置 variances[0]=0.1起标准化过程
+        priors[:, :2] + loc[:, :2] * variances[0] * priors[:, 2:],
+        # 计算先验框调整后宽和高variances[1]=0.2
+        priors[:, 2:] * torch.exp(loc[:, 2:] * variances[1])), 1)
+    boxes[:, :2] -= boxes[:, 2:] / 2  # 计算左上角
+    boxes[:, 2:] += boxes[:, :2]  # 计算右下角
     return boxes
 
 
-def log_sum_exp(x):
+def log_sum_exp(x):  # 批量归一化
     x_max = x.data.max()
-    return torch.log(torch.sum(torch.exp(x-x_max), 1, keepdim=True)) + x_max
+    return torch.log(torch.sum(torch.exp(x - x_max), 1, keepdim=True)) + x_max
 
 
 # Original author: Francisco Massa:
@@ -136,45 +135,47 @@ def nms(boxes, scores, overlap=0.5, top_k=200):
         h = yy2 - yy1
         w = torch.clamp(w, min=0.0)
         h = torch.clamp(h, min=0.0)
-        inter = w*h
+        inter = w * h
         rem_areas = torch.index_select(area, 0, idx)
         union = (rem_areas - inter) + area[i]
-        IoU = inter/union 
+        IoU = inter / union
         idx = idx[IoU.le(overlap)]
     return keep, count
+
 
 def letterbox_image(image, size):
     iw, ih = image.size
     w, h = size
-    scale = min(w/iw, h/ih)
-    nw = int(iw*scale)
-    nh = int(ih*scale)
+    scale = min(w / iw, h / ih)
+    nw = int(iw * scale)
+    nh = int(ih * scale)
 
-    image = image.resize((nw,nh), Image.BICUBIC)
-    new_image = Image.new('RGB', size, (128,128,128))
-    new_image.paste(image, ((w-nw)//2, (h-nh)//2))
+    image = image.resize((nw, nh), Image.BICUBIC)
+    new_image = Image.new('RGB', size, (128, 128, 128))
+    new_image.paste(image, ((w - nw) // 2, (h - nh) // 2))
     return new_image
 
+
 def ssd_correct_boxes(top, left, bottom, right, input_shape, image_shape):
-    new_shape = image_shape*np.min(input_shape/image_shape)
+    new_shape = image_shape * np.min(input_shape / image_shape)
 
-    offset = (input_shape-new_shape)/2./input_shape
-    scale = input_shape/new_shape
+    offset = (input_shape - new_shape) / 2. / input_shape
+    scale = input_shape / new_shape
 
-    box_yx = np.concatenate(((top+bottom)/2,(left+right)/2),axis=-1)
-    box_hw = np.concatenate((bottom-top,right-left),axis=-1)
+    box_yx = np.concatenate(((top + bottom) / 2, (left + right) / 2), axis=-1)
+    box_hw = np.concatenate((bottom - top, right - left), axis=-1)
 
     box_yx = (box_yx - offset) * scale
     box_hw *= scale
 
     box_mins = box_yx - (box_hw / 2.)
     box_maxes = box_yx + (box_hw / 2.)
-    boxes =  np.concatenate([
+    boxes = np.concatenate([
         box_mins[:, 0:1],
         box_mins[:, 1:2],
         box_maxes[:, 0:1],
         box_maxes[:, 1:2]
-    ],axis=-1)
+    ], axis=-1)
     print(np.shape(boxes))
-    boxes *= np.concatenate([image_shape, image_shape],axis=-1)
+    boxes *= np.concatenate([image_shape, image_shape], axis=-1)
     return boxes

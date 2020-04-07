@@ -8,6 +8,6 @@ Config = {
     'max_sizes': [60, 111, 162, 213, 264, 315], # 最大框尺寸
     'aspect_ratios': [[2], [2, 3], [2, 3], [2, 3], [2], [2]], # 生成长方形框时比例
     'variance': [0.1, 0.2],
-    'clip': True, #np.clip
+    'clip': True, # np.clip clip函数裁剪最小值和最大值，防止低于0，超出1
     'name': 'VOC', # VOC数据集格式前缀
 }
