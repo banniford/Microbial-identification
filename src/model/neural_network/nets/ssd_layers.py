@@ -24,8 +24,7 @@ class Detect(Function):
         output = torch.zeros(num, Config['num_classes'], Config["top_k"], 5)
 
         # 分类预测结果转换（1，8732，种类）torch.transpose(input, dim0, dim1, out=None) → Tensor 返回输入矩阵input的转置。交换维度dim0和dim1。 输出张量与输入张量共享内存，所以改变其中一个会导致另外一个也被修改。
-        conf_preds = conf_data.view(num, num_priors,
-                                    Config['num_classes']).transpose(2, 1)
+        conf_preds = conf_data.view(num, num_priors,Config['num_classes']).transpose(2, 1)
         # 对每一张图片进行处理
         for i in range(num):
             # 对先验框解码获得预测框

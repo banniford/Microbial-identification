@@ -47,26 +47,26 @@ class SSD(nn.Module):
             if k % 2 == 1:
                 sources.append(x)
 
-                # [batch_size,channel
-                # 添加回归层和分类层
-                for (x, l, c) in zip(sources, self.loc, self.conf):
-                    loc.append(l(x).permute(0, 2, 3, 1).contiguous())  # permute 通道数翻转
-                    conf.append(c(x).permute(0, 2, 3, 1).contiguous())
+ # [batch_size,channel
+        # 添加回归层和分类层
+        for (x, l, c) in zip(sources, self.loc, self.conf):
+            loc.append(l(x).permute(0, 2, 3, 1).contiguous())  # permute 通道数翻转
+            conf.append(c(x).permute(0, 2, 3, 1).contiguous())
 
-                # 进行resize
-                loc = torch.cat([o.view(o.size(0), -1) for o in loc], 1)
-                conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1)
-                if self.phase == "test":
-                    output = self.detect.apply(loc.view(loc.size(0), -1, 4),
-                                               self.softmax(conf.view(conf.size(0), -1, self.num_classes)),
-                                               self.priors)
-                else:
-                    output = (
-                        loc.view(loc.size(0), -1, 4),
-                        conf.view(conf.size(0), -1, self.num_classes),
-                        self.priors
+        # 进行resize
+        loc = torch.cat([o.view(o.size(0), -1) for o in loc], 1)
+        conf = torch.cat([o.view(o.size(0), -1) for o in conf], 1)
+        if self.phase == "test":
+            output = self.detect.apply(loc.view(loc.size(0), -1, 4),
+                                        self.softmax(conf.view(conf.size(0), -1, self.num_classes)),
+                                        self.priors)
+        else:
+            output = (
+                loc.view(loc.size(0), -1, 4),
+                conf.view(conf.size(0), -1, self.num_classes),
+                self.priors
                     )
-                return output
+        return output
 
 
 def add_extras(i, batch_norm=False):

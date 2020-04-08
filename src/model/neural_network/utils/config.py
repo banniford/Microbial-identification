@@ -10,8 +10,8 @@ Config = {
     'variance': [0.1, 0.2],
     'clip': True, # np.clip clip函数裁剪最小值和最大值，防止低于0，超出1
     'name': 'VOC', # VOC数据集格式前缀
-    # "model_path": 'model_data/ssd_weights.pth',# 模型路径
-    "model_path":'outputs/Epoch10-Loc0.7121-Conf2.2285.pth',# 模型路径
+    "model_path": 'model_data/ssd_weights.pth',# 模型路径
+    # "model_path":'outputs/1.pth',# 模型路径
     "classes_path": 'model_data/voc_classes.txt',# 类别
     "model_image_size" : (300, 300, 3), # 输入参数
     "confidence": 0.5, # 置信度
