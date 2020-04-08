@@ -92,9 +92,7 @@ def log_sum_exp(x):  # 批量归一化
     return torch.log(torch.sum(torch.exp(x - x_max), 1, keepdim=True)) + x_max
 
 
-# Original author: Francisco Massa:
-# https://github.com/fmassa/object-detection.torch
-# Ported to PyTorch by Max deGroot (02/01/2017)
+
 def nms(boxes, scores, overlap=0.5, top_k=200):
     keep = scores.new(scores.size(0)).zero_().long()
     if boxes.numel() == 0:
