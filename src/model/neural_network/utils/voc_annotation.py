@@ -1,10 +1,16 @@
 #从VOC数据集的xml文件中提取位置信息并生成训练索引
 import xml.etree.ElementTree as ET
-from os import getcwd
+import os
 
+indx=('python ../VOCdevkit/VOC2007/voc2ssd.py')
+p=os.system(indx)
 sets=[('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
-
-classes = ["RBC"]
+classes=[]
+with open('../model_data/voc_classes.txt', 'r') as f:
+    for line in f.readlines():  # 依次读取每行
+        line = line.strip()  # 去掉每行头尾空白
+        if line!='' and line not in classes:
+            classes.append(line)
 
 def convert_annotation(year, image_id, list_file):
     in_file = open('../VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
@@ -14,6 +20,9 @@ def convert_annotation(year, image_id, list_file):
     for obj in root.iter('object'):
         difficult = obj.find('difficult').text
         cls = obj.find('name').text
+
+
+
         if cls not in classes or int(difficult)==1:
             continue
         cls_id = classes.index(cls)
@@ -21,7 +30,7 @@ def convert_annotation(year, image_id, list_file):
         b = (int(xmlbox.find('xmin').text), int(xmlbox.find('ymin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymax').text))
         list_file.write(" " + ",".join([str(a) for a in b]) + ',' + str(cls_id))
 
-wd = getcwd()[:-6]
+wd = os.getcwd()[:-6]
 
 for year, image_set in sets:
     image_ids = open('../VOCdevkit/VOC%s/ImageSets/Main/%s.txt'%(year, image_set)).read().strip().split()
