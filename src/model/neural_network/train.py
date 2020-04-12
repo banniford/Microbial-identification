@@ -5,6 +5,9 @@ import torch.backends.cudnn as cudnn
 import torch
 import numpy as np
 import torch.optim as optim
+from utils.voc_annotation import voc
+
+
 
 def adjust_learning_rate(optimizer, lr, gamma, step):
     lr = lr * (gamma ** (step))
@@ -12,19 +15,20 @@ def adjust_learning_rate(optimizer, lr, gamma, step):
         param_group['lr'] = lr
     return lr
 
-if __name__ == "__main__":
-    Batch_size = 8 # 每批次输入图片数量
-    lr = 1e-5
-    Epoch = 10
-    Cuda = False
-    Start_iter = 0
+def train():
+    voc()
+    Batch_size = Config["Batch_size"]  # 每批次输入图片数量
+    lr = Config["lr"]
+    Epoch = Config["Epoch"]
+    Cuda = Config["Cuda"]
+    Start_iter = Config["Start_iter"]
     # 需要使用device来指定网络在GPU还是CPU运行
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = get_ssd("train",Config["num_classes"])
 
     print('Loading weights into state dict...')
     model_dict = model.state_dict()
-    pretrained_dict = torch.load("model_data/ssd_weights.pth",map_location=torch.device('cpu'))
+    pretrained_dict = torch.load("neural_network/model_data/ssd_weights.pth",map_location=torch.device('cpu'))
     pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) ==  np.shape(v)}
     model_dict.update(pretrained_dict)
     model.load_state_dict(model_dict)
@@ -36,7 +40,7 @@ if __name__ == "__main__":
         cudnn.benchmark = True
         net = net.cuda()
 
-    annotation_path = '2007_train.txt'
+    annotation_path = 'neural_network/2007_train.txt'
     with open(annotation_path) as f:
         lines = f.readlines()
     np.random.seed(10101)
@@ -89,4 +93,4 @@ if __name__ == "__main__":
             print('iter:' + str(iteration) + '/' + str(epoch_size) + ' || Loc_Loss: %.4f || Conf_Loss: %.4f ||' % (loc_loss/(iteration+1),conf_loss/(iteration+1)), end=' ')
 
         print('Saving state, iter:', str(epoch+1))
-        torch.save(model.state_dict(), 'logs/Epoch%d-Loc%.4f-Conf%.4f.pth'%((epoch+1),loc_loss/(iteration+1),conf_loss/(iteration+1)))
+        torch.save(model.state_dict(), 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth'%((epoch+1),loc_loss/(iteration+1),conf_loss/(iteration+1)))

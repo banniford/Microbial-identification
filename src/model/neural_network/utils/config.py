@@ -10,9 +10,9 @@ Config = {
     'variance': [0.1, 0.2],
     'clip': True, # np.clip clip函数裁剪最小值和最大值，防止低于0，超出1
     'name': 'VOC', # VOC数据集格式前缀
-    "model_path": 'model_data/ssd_weights.pth',# 模型路径
+    "model_path": 'neural_network/model_data/ssd_weights.pth',# 模型路径
     # "model_path":'outputs/1.pth',# 模型路径
-    "classes_path": 'model_data/voc_classes.txt',# 类别
+    "classes_path": 'neural_network/model_data/voc_classes.txt',# 类别
     "model_image_size" : (300, 300, 3), # 输入参数
     "confidence": 0.5, # 置信度
     "Cuda":False, # Gpu加速
@@ -22,4 +22,8 @@ Config = {
     "nms_thresh":0.45,# 阈值 必须大于零！！
     "trainval_percent":1,# 自己设定（训练集+验证集）所占（训练集+验证集+测试集）的比重
     "train_percent":1,# 自己设定（训练集）所占（训练集+验证集）的比重
+    "Batch_size":8,#每批次输出图片数量
+    "lr":1e-5,#学习率
+    "Epoch":10,#循环轮次
+    "Start_iter":0,#从哪一组开始
 }

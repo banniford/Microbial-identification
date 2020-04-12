@@ -2,8 +2,8 @@ import os
 import random 
 from utils.config import Config
 
-xmlfilepath=r'../VOCdevkit/VOC2007/Annotations' #os相对于上层调用时得os路径
-saveBasePath=r"../VOCdevkit/VOC2007/ImageSets/Main/"
+xmlfilepath=r'neural_network/VOCdevkit/VOC2007/Annotations' #os相对于上层调用时得os路径
+saveBasePath=r"neural_network//VOCdevkit/VOC2007/ImageSets/Main/"
  
 trainval_percent=Config["trainval_percent"]  # 自己设定（训练集+验证集）所占（训练集+验证集+测试集）的比重
 train_percent=Config["train_percent"] # 自己设定（训练集）所占（训练集+验证集）的比重
