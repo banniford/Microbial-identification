@@ -35,7 +35,7 @@ def voc():
             if line != '' and line not in classes:
                 classes.append(line)
 
-    wd = os.getcwd()[:-6]
+    wd = os.getcwd()[:]
     for year, image_set in sets:
         image_ids = open('neural_network/VOCdevkit/VOC%s/ImageSets/Main/%s.txt' % (year, image_set)).read().strip().split()
         list_file = open('neural_network/%s_%s.txt' % (year, image_set), 'w')

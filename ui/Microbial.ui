@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>833</width>
-    <height>619</height>
+    <width>1129</width>
+    <height>907</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,12 +25,12 @@
      <rect>
       <x>10</x>
       <y>70</y>
-      <width>791</width>
-      <height>521</height>
+      <width>1111</width>
+      <height>671</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <property name="contextMenuPolicy">
@@ -49,7 +49,7 @@
       <property name="geometry">
        <rect>
         <x>108</x>
-        <y>37</y>
+        <y>137</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -65,7 +65,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>80</y>
+        <y>180</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -81,7 +81,7 @@
       <property name="geometry">
        <rect>
         <x>197</x>
-        <y>80</y>
+        <y>180</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -97,7 +97,7 @@
       <property name="geometry">
        <rect>
         <x>108</x>
-        <y>123</y>
+        <y>223</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -113,7 +113,7 @@
       <property name="geometry">
        <rect>
         <x>108</x>
-        <y>80</y>
+        <y>180</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -128,10 +128,10 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>300</x>
         <y>20</y>
-        <width>441</width>
-        <height>441</height>
+        <width>801</width>
+        <height>601</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -148,8 +148,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>441</width>
-         <height>441</height>
+         <width>801</width>
+         <height>601</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -185,9 +185,9 @@
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>170</y>
+        <y>270</y>
         <width>204</width>
-        <height>141</height>
+        <height>191</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -208,29 +208,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="readOnly">
-          <bool>false</bool>
-         </property>
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::UpDownArrows</enum>
-         </property>
-         <property name="accelerated">
-          <bool>false</bool>
-         </property>
-         <property name="suffix">
-          <string/>
-         </property>
-         <property name="maximum">
-          <number>50</number>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
+       <item row="1" column="0" colspan="2">
         <widget class="QPushButton" name="pushButton_9">
          <property name="enabled">
           <bool>false</bool>
@@ -242,56 +220,217 @@
        </item>
       </layout>
      </widget>
-     <widget class="QProgressBar" name="progressBar">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>330</y>
-        <width>201</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="mouseTracking">
-       <bool>false</bool>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhNone</set>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="textVisible">
-       <bool>true</bool>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="invertedAppearance">
-       <bool>false</bool>
-      </property>
-      <property name="textDirection">
-       <enum>QProgressBar::TopToBottom</enum>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
       <string>模型训练</string>
      </attribute>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>380</y>
+        <width>1081</width>
+        <height>261</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="acceptRichText">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_13">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>设置模型参数</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_14">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>选择迁移模型</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_15">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>190</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>校验数据集</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_16">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>270</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>开始训练</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>371</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
       <string>图片预测</string>
      </attribute>
+     <widget class="QPushButton" name="pushButton_10">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>280</y>
+        <width>131</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>选择图片</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="frame_2">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>40</y>
+        <width>801</width>
+        <height>601</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>801</width>
+         <height>601</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Box</enum>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+       <property name="midLineWidth">
+        <number>3</number>
+       </property>
+       <property name="text">
+        <string>没有图像</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <property name="indent">
+        <number>-1</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="pushButton_11">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>70</y>
+        <width>131</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>选择模型</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_12">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>490</y>
+        <width>131</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>目标检测</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>20</y>
+        <width>651</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="label">
