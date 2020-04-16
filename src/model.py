@@ -5,7 +5,9 @@ def voc_deal():
     voc()
 
 def predict_start(img):
-    predict(img)
+    f_predict=predict(img)
+    # predict(img)
+    return f_predict
 
 def train_start():
     train()

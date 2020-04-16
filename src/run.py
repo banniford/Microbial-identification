@@ -2,10 +2,11 @@ import sys
 import Microbial
 import parameter
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
-from PyQt5.QtGui import QIntValidator,QDoubleValidator,QRegExpValidator
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QRegExp
 from utils.config import Config
+from model import predict_start,voc_deal,train_start
 
 
 class fnc(QMainWindow):
@@ -13,6 +14,7 @@ class fnc(QMainWindow):
         QMainWindow.__init__(self)
         self.main_ui=Microbial.Ui_MainWindow()
         self.main_ui.setupUi(self)
+        self.img = ""
         self.main_ui.pushButton_7.clicked.connect(self.image)
         self.main_ui.pushButton.clicked.connect(self.headline)
         self.main_ui.pushButton_8.clicked.connect(self.close)
@@ -21,6 +23,8 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_10.clicked.connect(self.open_image)
         self.main_ui.pushButton_11.clicked.connect(self.module)
         self.main_ui.pushButton_14.clicked.connect(self.migrate)
+        self.main_ui.pushButton_12.clicked.connect(self.predict)
+        self.main_ui.pushButton_15.clicked.connect(self.check)
 
     def headline(self):
         self.main_ui.pushButton.setEnabled(False)
@@ -53,22 +57,36 @@ class fnc(QMainWindow):
         self.main_ui.label_2.setText("没有图像")
 
     def open_image(self):
-        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png)")
+        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg)")
+        print(Fname)
         if Fname != "":
             self.main_ui.label_3.setPixmap(QPixmap(Fname))
+            self.img=Fname
             self.main_ui.pushButton_12.setEnabled(True)
 
     def migrate(self):
-        Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "图像文件(*.pth)")
+        Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "模型文件(*.pth)")
         if Fname!="":
             self.main_ui.label_5.setText("模型路径："+ Fname)
             Config["migrate_path"]=Fname
 
     def module(self):
-        Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "图像文件(*.pth)")
+        Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "模型文件(*.pth)")
         if Fname!="":
             self.main_ui.label_5.setText("模型路径："+ Fname)
             Config["module_path"]=Fname
+
+    def predict(self):
+        img=predict_start(self.img)
+        if img != "":
+            self.main_ui.label_3.setPixmap(QPixmap(str(img)))
+
+
+    def check(self):
+        voc_deal()
+        self.main_ui.pushButton_16.setEnabled(True)
+
+
 
 class parameters(QWidget):
     def __init__(self):
@@ -219,44 +237,22 @@ class parameters(QWidget):
                     if i !='':
                         f.write(i)
                         f.write("\n")
-            classes=[]
-            # for i in classes:
-            #     if i =="":
-            #         classes.remove(i)
-            # self.configtext=classes remove删除会使索引向前进一，会跳过一个索引
-            with open("neural_network/model_data/voc_classes.txt", "r")as f:
-                for line in f.readlines():  # 依次读取每行
-                    line = line.strip()  # 去掉每行头尾空白
-                    if line != '' and line not in classes:
-                        classes.append(line)
-            self.configtext = classes
-        else:
-            classes=[]
-            with open("neural_network/model_data/voc_classes.txt", "r")as f:
-                for line in f.readlines():  # 依次读取每行
-                    line = line.strip()  # 去掉每行头尾空白
-                    if line != '' and line not in classes:
-                        classes.append(line)
-            self.configtext = classes
 
-
-
-
-
-    # def fnc1(self):
-    #     print("1")
-    #     pixmap = QPixmap('C:\\Users\\some\\Desktop\\（毕设）全自动捕捉显微镜\\深度学习资料\\pyqt\\ui\\image\\jmj.jpg')
-    #     print("2")
-    #     self.label_2.setPixmap(pixmap)
 
 def interaction():
-    configtext=("类别："+str(widget.configtext)+" | "+"min_dim：%s" % (Config["min_dim"])+" | "+"Epoch：%s" % (Config["Epoch"])
+    classes=[]
+    with open("neural_network/model_data/voc_classes.txt", "r")as f:
+        for line in f.readlines():  # 依次读取每行
+            line = line.strip()  # 去掉每行头尾空白
+            if line != '' and line not in classes:
+                classes.append(line)
+    configtext=("类别："+str(classes)+" | "+"min_dim：%s" % (Config["min_dim"])+" | "+"Epoch：%s" % (Config["Epoch"])
                 +" | "+"Cuda:%s"%(Config["Cuda"])+" | "+ "Batch_size：%s" % (Config["Batch_size"])+" | "+"confidence：%s" % (Config["confidence"])+" | "+
                 "trainval_percent：%s" % (Config["trainval_percent"])+" | "+"train_percent：%s" % (Config["train_percent"])+
                 " | "+"lr：%s" % (Config["lr"]))
     # toPlainText 获取 setText 设置 setPlainText 多行设置 append 追加
     window.main_ui.textEdit.append(str(configtext))
-    num_class=len(widget.configtext)
+    num_class=len(classes)
     Config["num_classes"]=num_class+1
 
 

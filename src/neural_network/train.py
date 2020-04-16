@@ -16,14 +16,11 @@ def adjust_learning_rate(optimizer, lr, gamma, step):
     return lr
 
 def train():
-    voc()
     Batch_size = Config["Batch_size"]  # 每批次输入图片数量
     lr = Config["lr"]
     Epoch = Config["Epoch"]
     Cuda = Config["Cuda"]
     Start_iter = Config["Start_iter"]
-    # 需要使用device来指定网络在GPU还是CPU运行
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = get_ssd("train",Config["num_classes"])
 
     print('Loading weights into state dict...')

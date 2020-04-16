@@ -158,4 +158,7 @@ def predict(img):
         exit(1)
     else:
         r_image = predict.detect_image(image)
-        r_image.show()
+        # r_image.show()
+        path="neural_network/img/2.png"
+        r_image.save(path)
+        return path
