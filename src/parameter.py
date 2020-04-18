@@ -102,12 +102,11 @@ class Ui_Form(object):
         self.label.setObjectName("label")
 
         self.retranslateUi(Form)
-        self.pushButton_2.clicked.connect(Form.close)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "训练参数"))
+        Form.setWindowTitle(_translate("Form", "设置训练参数"))
         self.label_5.setText(_translate("Form", "min_dim：300"))
         self.label_6.setText(_translate("Form", "confidence：0.5"))
         self.label_7.setText(_translate("Form", "Cuda：False"))

@@ -141,6 +141,7 @@ class parameters(QWidget):
         self.widget_ui.lineEdit_7.setPlaceholderText("0-1")
         self.widget_ui.pushButton.clicked.connect(self.right)
         self.widget_ui.pushButton.clicked.connect(self.close)
+        self.widget_ui.pushButton_2.clicked.connect(self.close)
         # 校验
         self.widget_ui.lineEdit.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_3.editingFinished.connect(self.enter_line)
@@ -163,7 +164,6 @@ class parameters(QWidget):
         self.widget_ui.lineEdit_5.setValidator(validator)
         #
         self.widget_ui.lineEdit_7.setValidator(validator)
-
 
     def enter_line(self):
         if self.widget_ui.lineEdit.text() != "" and not(self.widget_ui.lineEdit.text().isdigit()):
@@ -296,6 +296,8 @@ if __name__ == "__main__":
     btn.clicked.connect(widget.show)
     btn1=widget.widget_ui.pushButton
     btn1.clicked.connect(interaction)
+    btn2=widget.widget_ui.pushButton_2
+    btn2.clicked.connect(interaction)
 
 
     window.show()

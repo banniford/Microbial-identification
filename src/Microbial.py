@@ -158,7 +158,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "显微识别系统"))
         self.pushButton_2.setText(_translate("MainWindow", "上移镜头"))
         self.pushButton_3.setText(_translate("MainWindow", "左移镜头"))
         self.pushButton_4.setText(_translate("MainWindow", "右移镜头"))
