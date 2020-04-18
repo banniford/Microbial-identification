@@ -25,6 +25,12 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_14.clicked.connect(self.migrate)
         self.main_ui.pushButton_12.clicked.connect(self.predict)
         self.main_ui.pushButton_15.clicked.connect(self.check)
+        self.main_ui.pushButton_16.clicked.connect(self.train)
+
+
+    def train(self):
+        # 多线程
+        train_start(self)
 
     def headline(self):
         self.main_ui.pushButton.setEnabled(False)
@@ -57,7 +63,7 @@ class fnc(QMainWindow):
         self.main_ui.label_2.setText("没有图像")
 
     def open_image(self):
-        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg)")
+        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png)")
         print(Fname)
         if Fname != "":
             self.main_ui.label_3.setPixmap(QPixmap(Fname))
@@ -234,7 +240,7 @@ class parameters(QWidget):
             classes=self.widget_ui.textEdit.toPlainText().split(" ")
             with open("neural_network/model_data/voc_classes.txt","w")as f:
                 for i in classes:
-                    if i !='':
+                    if i !='' or i!="\n":
                         f.write(i)
                         f.write("\n")
 

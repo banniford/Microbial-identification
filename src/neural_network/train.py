@@ -5,7 +5,7 @@ import torch.backends.cudnn as cudnn
 import torch
 import numpy as np
 import torch.optim as optim
-from utils.voc_annotation import voc
+
 
 
 
@@ -15,7 +15,7 @@ def adjust_learning_rate(optimizer, lr, gamma, step):
         param_group['lr'] = lr
     return lr
 
-def train():
+def train(Objct):
     Batch_size = Config["Batch_size"]  # 每批次输入图片数量
     lr = Config["lr"]
     Epoch = Config["Epoch"]
@@ -86,8 +86,13 @@ def train():
             loc_loss += loss_l.item()
             conf_loss += loss_c.item()
 
+            Objct.append('\nEpoch:'+ str(epoch+1) + '/' + str(Epoch))
             print('\nEpoch:'+ str(epoch+1) + '/' + str(Epoch))
-            print('iter:' + str(iteration) + '/' + str(epoch_size) + ' || Loc_Loss: %.4f || Conf_Loss: %.4f ||' % (loc_loss/(iteration+1),conf_loss/(iteration+1)), end=' ')
+            # run.window.main_ui.textEdit.append('iter:' + str(iteration) + '/' + str(epoch_size) + ' || Loc_Loss: %.4f || Conf_Loss: %.4f ||' %
+            #       (loc_loss/(iteration+1),conf_loss/(iteration+1)), end=' ')
+            print('iter:' + str(iteration) + '/' + str(epoch_size) + ' || Loc_Loss: %.4f || Conf_Loss: %.4f ||' %
+                  (loc_loss/(iteration+1),conf_loss/(iteration+1)), end=' ')
 
-        print('Saving state, iter:', str(epoch+1))
+        # print('Saving state, iter:', str(epoch+1))
+        # run.window.main_ui.textEdit.append('Saving state, iter:', str(epoch+1))
         torch.save(model.state_dict(), 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth'%((epoch+1),loc_loss/(iteration+1),conf_loss/(iteration+1)))

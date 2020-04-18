@@ -40,9 +40,9 @@ class SSD(object):
 
         # 载入模型，如果原来的模型里已经包括了模型结构则直接载入。
         # 否则先构建模型再载入
-        # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model = ssd.get_ssd("test", self.num_classes)
         self.net = model
+        # 标签文件中不能有空白行
         model.load_state_dict(torch.load(self.Config["model_path"], map_location=torch.device('cpu')), strict=False)
 
         self.net = torch.nn.DataParallel(self.net)
@@ -62,6 +62,9 @@ class SSD(object):
     #   检测图片
     # ---------------------------------------------------#
     def detect_image(self, image):
+        #计数
+        count=0
+
         image_shape = np.array(np.shape(image)[0:2])
 
         # letterbox_image边缘加灰条仿失真，改变总体图片大小为300*300
@@ -106,13 +109,14 @@ class SSD(object):
         boxes = ssd_correct_boxes(top_ymin, top_xmin, top_ymax, top_xmax,
                                   np.array([self.Config["model_image_size"][0], self.Config["model_image_size"][1]]),
                                   image_shape)
-
+        #字体
         font = ImageFont.truetype(font='model_data/simhei.ttf',
                                   size=np.floor(3e-2 * np.shape(image)[1] + 0.5).astype('int32'))
-
+        #厚度
         thickness = (np.shape(image)[0] + np.shape(image)[1]) // self.Config["model_image_size"][0]
 
         for i, c in enumerate(top_label):
+            count+=1
             predicted_class = c
             score = top_conf[i]
 
@@ -128,11 +132,11 @@ class SSD(object):
             right = min(np.shape(image)[1], np.floor(right + 0.5).astype('int32'))
 
             # 画框框
-            label = '{} {:.2f}'.format(predicted_class, score)
+            label = '{} {:.2f}-{}'.format(predicted_class, score,count)
             draw = ImageDraw.Draw(image)
             label_size = draw.textsize(label, font)
             label = label.encode('utf-8')
-            print(label)
+            # print(label)
 
             if top - label_size[1] >= 0:
                 text_origin = np.array([left, top - label_size[1]])

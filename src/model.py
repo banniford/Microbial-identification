@@ -9,5 +9,5 @@ def predict_start(img):
     # predict(img)
     return f_predict
 
-def train_start():
-    train()
+def train_start(Objct):
+    train(Objct)
