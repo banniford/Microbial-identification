@@ -6,7 +6,9 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QRegExp
 from utils.config import Config
-from model import predict_start,voc_deal,train_start
+from neural_network.utils.voc_annotation import voc
+from neural_network.predict import predict
+from neural_network.train import train
 
 
 class fnc(QMainWindow):
@@ -14,7 +16,9 @@ class fnc(QMainWindow):
         QMainWindow.__init__(self)
         self.main_ui=Microbial.Ui_MainWindow()
         self.main_ui.setupUi(self)
+        self.train_start=train()
         self.img = ""
+        self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.image)
         self.main_ui.pushButton.clicked.connect(self.headline)
         self.main_ui.pushButton_8.clicked.connect(self.close)
@@ -26,13 +30,32 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_12.clicked.connect(self.predict)
         self.main_ui.pushButton_15.clicked.connect(self.check)
         self.main_ui.pushButton_16.clicked.connect(self.train)
+        self.main_ui.pushButton_17.clicked.connect(self.stop_train)
 
+
+
+    def stop_train(self):
+        #中止训练
+        self.main_ui.pushButton_13.setEnabled(True)
+        self.main_ui.pushButton_14.setEnabled(True)
+        self.main_ui.pushButton_15.setEnabled(True)
+        self.main_ui.pushButton_16.setEnabled(False)
+        self.main_ui.pushButton_17.setEnabled(False)
+
+
+
+    def train_msg(self,msg):
+        self.main_ui.textEdit.append(msg)
 
     def train(self):
         # 多线程
-        train_start(self)
+        self.main_ui.pushButton_13.setEnabled(False)
+        self.main_ui.pushButton_14.setEnabled(False)
+        self.main_ui.pushButton_15.setEnabled(False)
+        self.train_start.start()
 
     def headline(self):
+        #摄像头检测
         self.main_ui.pushButton.setEnabled(False)
         self.main_ui.label.setText("摄像头已连接")
 
@@ -83,14 +106,15 @@ class fnc(QMainWindow):
             Config["module_path"]=Fname
 
     def predict(self):
-        img=predict_start(self.img)
+        img=predict(self.img)
         if img != "":
             self.main_ui.label_3.setPixmap(QPixmap(str(img)))
 
 
     def check(self):
-        voc_deal()
+        voc()
         self.main_ui.pushButton_16.setEnabled(True)
+        self.main_ui.pushButton_17.setEnabled(True)
 
 
 
