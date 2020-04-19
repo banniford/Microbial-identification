@@ -135,6 +135,8 @@ class parameters(QWidget):
         self.widget_ui.label_10.setText("train_percent：%s" % (Config["train_percent"]))
         self.widget_ui.label_11.setText("Batch_size：%s" % (Config["Batch_size"]))
         self.widget_ui.label_12.setText("lr：%s" % (Config["lr"]))
+        self.widget_ui.label_2.setText("loc_loss：%s" % (Config["loc_loss"]))
+        self.widget_ui.label_3.setText("conf_loss：%s" % (Config["conf_loss"]))
         self.widget_ui.lineEdit.setPlaceholderText("100-1000")
         self.widget_ui.lineEdit_2.setPlaceholderText("0-0.9")
         self.widget_ui.lineEdit_3.setPlaceholderText("1-500")
@@ -142,6 +144,8 @@ class parameters(QWidget):
         self.widget_ui.lineEdit_5.setPlaceholderText("0-1")
         self.widget_ui.lineEdit_6.setPlaceholderText("8,16,32,64")
         self.widget_ui.lineEdit_7.setPlaceholderText("0-1")
+        self.widget_ui.lineEdit_8.setPlaceholderText("0-2")
+        self.widget_ui.lineEdit_9.setPlaceholderText("0-5")
         self.widget_ui.pushButton.clicked.connect(self.right)
         self.widget_ui.pushButton.clicked.connect(self.close)
         self.widget_ui.pushButton_2.clicked.connect(self.close)
@@ -153,6 +157,8 @@ class parameters(QWidget):
         self.widget_ui.lineEdit_4.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_5.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_7.editingFinished.connect(self.enter_line)
+        self.widget_ui.lineEdit_8.editingFinished.connect(self.enter_line)
+        self.widget_ui.lineEdit_9.editingFinished.connect(self.enter_line)
 
         # 字符和数字表示
         # reg=QRegExp("[a-zA-Z0-9]+$")
@@ -227,6 +233,22 @@ class parameters(QWidget):
                 self.widget_ui.lineEdit_7.setText(str(Config["lr"]))
 
 
+        if self.widget_ui.lineEdit_8.text() != "" :
+            edit8 = float(self.widget_ui.lineEdit_8.text())
+            if edit8<=0:
+                self.widget_ui.lineEdit_8.setText("0.5")
+            elif edit8>=2:
+                self.widget_ui.lineEdit_8.setText("2")
+
+
+        if self.widget_ui.lineEdit_9.text() != "":
+            edit9 = float(self.widget_ui.lineEdit_9.text())
+            if edit9<=0:
+                self.widget_ui.lineEdit_9.setText("0.5")
+            elif edit9 >=5:
+                self.widget_ui.lineEdit_9.setText("5")
+
+
 
     def right(self):
 
@@ -263,6 +285,14 @@ class parameters(QWidget):
             Config["lr"]=float(self.widget_ui.lineEdit_7.text())
             self.widget_ui.label_12.setText("lr：%s" % (Config["lr"]))
 
+        if self.widget_ui.lineEdit_8.text() != "":
+            Config["loc_loss"]=float(self.widget_ui.lineEdit_8.text())
+            self.widget_ui.label_2.setText("loc_loss：%s" % (Config["loc_loss"]))
+
+        if self.widget_ui.lineEdit_9.text() != "":
+            Config["conf_loss"]=float(self.widget_ui.lineEdit_9.text())
+            self.widget_ui.label_3.setText("conf_loss：%s" % (Config["conf_loss"]))
+
         if self.widget_ui.textEdit.toPlainText()!="":
             classes=self.widget_ui.textEdit.toPlainText().split(" ")
             with open("neural_network/model_data/voc_classes.txt","w")as f:
@@ -282,7 +312,7 @@ def interaction():
     configtext=("类别："+str(classes)+" | "+"min_dim：%s" % (Config["min_dim"])+" | "+"Epoch：%s" % (Config["Epoch"])
                 +" | "+"Cuda:%s"%(Config["Cuda"])+" | "+ "Batch_size：%s" % (Config["Batch_size"])+" | "+"confidence：%s" % (Config["confidence"])+" | "+
                 "trainval_percent：%s" % (Config["trainval_percent"])+" | "+"train_percent：%s" % (Config["train_percent"])+
-                " | "+"lr：%s" % (Config["lr"]))
+                " | "+"lr：%s" % (Config["lr"])+" | "+"loc_loss：%s" % (Config["loc_loss"])+" | "+"conf_loss：%s" % (Config["conf_loss"]))
     # toPlainText 获取 setText 设置 setPlainText 多行设置 append 追加
     window.main_ui.textEdit.append(str(configtext))
     num_class=len(classes)
