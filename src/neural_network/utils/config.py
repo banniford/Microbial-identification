@@ -28,4 +28,6 @@ Config = {
     "lr":1e-5,#学习率
     "Epoch":10,#循环轮次
     "Start_iter":0,#从哪一组开始
+    "loc_loss":1,
+    "conf_loss":2.5
 }

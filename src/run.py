@@ -16,8 +16,8 @@ class fnc(QMainWindow):
         QMainWindow.__init__(self)
         self.main_ui=Microbial.Ui_MainWindow()
         self.main_ui.setupUi(self)
-        self.train_start=train()
         self.img = ""
+        self.train_start = train()
         self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.image)
         self.main_ui.pushButton.clicked.connect(self.headline)
@@ -41,7 +41,8 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_15.setEnabled(True)
         self.main_ui.pushButton_16.setEnabled(False)
         self.main_ui.pushButton_17.setEnabled(False)
-
+        self.main_ui.textEdit.append("正在退出......请稍等")
+        self.train_start.flag=False
 
 
     def train_msg(self,msg):
@@ -52,6 +53,8 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_13.setEnabled(False)
         self.main_ui.pushButton_14.setEnabled(False)
         self.main_ui.pushButton_15.setEnabled(False)
+        self.train_start.flag = True
+        self.main_ui.textEdit.append("训练开始......")
         self.train_start.start()
 
     def headline(self):
