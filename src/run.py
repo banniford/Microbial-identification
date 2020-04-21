@@ -7,8 +7,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import QRegExp
 from utils.config import Config
 from neural_network.utils.voc_annotation import voc
-from neural_network.predict import predict
+from neural_network.predict import SSD
 from neural_network.train import train
+from PIL import Image
 
 
 class fnc(QMainWindow):
@@ -18,6 +19,9 @@ class fnc(QMainWindow):
         self.main_ui.setupUi(self)
         self.img = ""
         self.train_start = train()
+        self.predict_start=SSD()
+        self.predict_start.set_image.connect(self.set_image)
+        self.predict_start.msg.connect(self.predict_msg)
         self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.image)
         self.main_ui.pushButton.clicked.connect(self.headline)
@@ -45,6 +49,15 @@ class fnc(QMainWindow):
         self.train_start.flag=False
 
 
+    def predict_msg(self,msg):
+        self.main_ui.textEdit.append(msg)
+
+    def set_image(self,path):
+        if path=="":
+            self.main_ui.label_3.setPixmap(QPixmap(self.img))
+        else:
+            self.main_ui.label_3.setPixmap(QPixmap(path))
+
     def train_msg(self,msg):
         self.main_ui.textEdit.append(msg)
 
@@ -56,6 +69,20 @@ class fnc(QMainWindow):
         self.train_start.flag = True
         self.main_ui.textEdit.append("训练开始......")
         self.train_start.start()
+
+    def predict(self):
+        self.main_ui.textEdit.append("开始预测......")
+        img = self.img
+        try:
+            image = Image.open(img)
+            # image.resize((640, 480), Image.ANTIALIAS)
+        except:
+            self.main_ui.textEdit.append("图片损坏")
+        else:
+            self.predict_start.image=image
+            self.predict_start.start()
+
+
 
     def headline(self):
         #摄像头检测
@@ -90,7 +117,7 @@ class fnc(QMainWindow):
 
     def open_image(self):
         Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png)")
-        print(Fname)
+        self.main_ui.textEdit.append("图片路径为:"+Fname)
         if Fname != "":
             self.main_ui.label_3.setPixmap(QPixmap(Fname))
             self.img=Fname
@@ -99,19 +126,26 @@ class fnc(QMainWindow):
     def migrate(self):
         Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "模型文件(*.pth)")
         if Fname!="":
-            self.main_ui.label_5.setText("模型路径："+ Fname)
+            self.main_ui.label_4.setText("模型路径："+ Fname)
             Config["migrate_path"]=Fname
+
 
     def module(self):
         Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "模型文件(*.pth)")
         if Fname!="":
+            back=Config["model_path"]
             self.main_ui.label_5.setText("模型路径："+ Fname)
-            Config["module_path"]=Fname
+            Config["model_path"]=Fname
+            try:
+                self.predict_start.generate()
+            except:
+                self.main_ui.textEdit.append("模型中类别不匹配，请更换模型或更改类别参数")
+                Config["model_path"]=back
+                self.predict_start.generate()
+                self.main_ui.label_5.setText("模型路径：" + Config["model_path"])
 
-    def predict(self):
-        img=predict(self.img)
-        if img != "":
-            self.main_ui.label_3.setPixmap(QPixmap(str(img)))
+
+
 
 
     def check(self):

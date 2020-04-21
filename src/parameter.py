@@ -110,7 +110,7 @@ class Ui_Form(object):
         self.textEdit.setReadOnly(False)
         self.textEdit.setObjectName("textEdit")
         self.label = QtWidgets.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(50, 270, 161, 16))
+        self.label.setGeometry(QtCore.QRect(50, 280, 161, 16))
         self.label.setObjectName("label")
 
         self.retranslateUi(Form)

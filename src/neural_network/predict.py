@@ -1,3 +1,4 @@
+from PyQt5.QtCore import pyqtSignal,  QThread
 from utils.config import Config
 import numpy as np
 import colorsys
@@ -6,20 +7,25 @@ import torch
 from nets import ssd
 import torch.backends.cudnn as cudnn
 from utils.box_utils import letterbox_image,ssd_correct_boxes
-from PIL import ImageFont, ImageDraw,Image
+from PIL import ImageFont, ImageDraw
 
 # 数据集的RGB平均像素
 MEANS = (104, 117, 123)
 
 
-class SSD(object):
+class SSD(QThread):
+    msg = pyqtSignal(str)
+    set_image=pyqtSignal(str)
     # ---------------------------------------------------#
     #   初始化RFB
     # ---------------------------------------------------#
     def __init__(self):
+        QThread.__init__(self)
         self.Config = Config
         self.class_names = self._get_class()
         self.generate()
+        self.image= None
+        self.path=""
 
     # ---------------------------------------------------#
     #   获得所有的分类
@@ -49,7 +55,7 @@ class SSD(object):
         cudnn.benchmark = True
         # self.net = self.net.cuda()
 
-        print('{} model, anchors, and classes loaded.'.format(self.Config["model_path"]))
+        # print('{} model, anchors, and classes loaded.'.format(self.Config["model_path"]))
         # 画框设置不同的颜色
         hsv_tuples = [(x / len(self.class_names), 1., 1.)
                       for x in range(len(self.class_names))]
@@ -61,15 +67,15 @@ class SSD(object):
     # ---------------------------------------------------#
     #   检测图片
     # ---------------------------------------------------#
-    def detect_image(self, image):
+    def run(self):
         #计数
         count=0
-
-        image_shape = np.array(np.shape(image)[0:2])
+        # print('{} model, anchors, and classes loaded.'.format(self.Config["model_path"]))
+        image_shape = np.array(np.shape(self.image)[0:2])
 
         # letterbox_image边缘加灰条仿失真，改变总体图片大小为300*300
         crop_img = np.array(
-            letterbox_image(image, (self.Config["model_image_size"][0], self.Config["model_image_size"][1])))
+            letterbox_image(self.image, (self.Config["model_image_size"][0], self.Config["model_image_size"][1])))
         # 转化float64
         photo = np.array(crop_img, dtype=np.float64)
 
@@ -83,6 +89,7 @@ class SSD(object):
         top_conf = []
         top_label = []
         top_bboxes = []
+
         # 置信度筛选
         for i in range(preds.size(1)):
             j = 0
@@ -95,74 +102,73 @@ class SSD(object):
                 top_label.append(label_name)
                 top_bboxes.append(coords)
                 j = j + 1
+
         # 将预测结果进行解码
         if len(top_conf) <= 0:
-            return image
-        top_conf = np.array(top_conf)
-        top_label = np.array(top_label)
-        top_bboxes = np.array(top_bboxes)
-        top_xmin, top_ymin, top_xmax, top_ymax = np.expand_dims(top_bboxes[:, 0], -1), np.expand_dims(top_bboxes[:, 1],
-                                                                                                      -1), np.expand_dims(
-            top_bboxes[:, 2], -1), np.expand_dims(top_bboxes[:, 3], -1)
+            self.msg.emit("图中一共有:0 个 目标对象")
+            self.set_image.emit("")
+            self.msg.emit("预测完成")
+        else:
+            top_conf = np.array(top_conf)
+            top_label = np.array(top_label)
+            top_bboxes = np.array(top_bboxes)
+            top_xmin, top_ymin, top_xmax, top_ymax = np.expand_dims(top_bboxes[:, 0], -1), np.expand_dims(
+                top_bboxes[:, 1],
+                -1), np.expand_dims(
+                top_bboxes[:, 2], -1), np.expand_dims(top_bboxes[:, 3], -1)
 
-        # 去掉灰条
-        boxes = ssd_correct_boxes(top_ymin, top_xmin, top_ymax, top_xmax,
-                                  np.array([self.Config["model_image_size"][0], self.Config["model_image_size"][1]]),
-                                  image_shape)
-        #字体
-        font = ImageFont.truetype(font='model_data/simhei.ttf',
-                                  size=np.floor(3e-2 * np.shape(image)[1] + 0.5).astype('int32'))
-        #厚度
-        thickness = (np.shape(image)[0] + np.shape(image)[1]) // self.Config["model_image_size"][0]
+            # 去掉灰条
+            boxes = ssd_correct_boxes(top_ymin, top_xmin, top_ymax, top_xmax,
+                                      np.array(
+                                          [self.Config["model_image_size"][0], self.Config["model_image_size"][1]]),
+                                      image_shape)
+            # 字体
+            font = ImageFont.truetype(font='model_data/simhei.ttf',
+                                      size=np.floor(3e-2 * np.shape(self.image)[1] + 0.5).astype('int32'))
+            # 厚度
+            thickness = (np.shape(self.image)[0] + np.shape(self.image)[1]) // self.Config["model_image_size"][0]
 
-        for i, c in enumerate(top_label):
-            count+=1
-            predicted_class = c
-            score = top_conf[i]
+            for i, c in enumerate(top_label):
+                count += 1
+                predicted_class = c
+                score = top_conf[i]
 
-            top, left, bottom, right = boxes[i]
-            top = top - 5
-            left = left - 5
-            bottom = bottom + 5
-            right = right + 5
+                top, left, bottom, right = boxes[i]
+                top = top - 5
+                left = left - 5
+                bottom = bottom + 5
+                right = right + 5
 
-            top = max(0, np.floor(top + 0.5).astype('int32'))
-            left = max(0, np.floor(left + 0.5).astype('int32'))
-            bottom = min(np.shape(image)[0], np.floor(bottom + 0.5).astype('int32'))
-            right = min(np.shape(image)[1], np.floor(right + 0.5).astype('int32'))
+                top = max(0, np.floor(top + 0.5).astype('int32'))
+                left = max(0, np.floor(left + 0.5).astype('int32'))
+                bottom = min(np.shape(self.image)[0], np.floor(bottom + 0.5).astype('int32'))
+                right = min(np.shape(self.image)[1], np.floor(right + 0.5).astype('int32'))
 
-            # 画框框
-            label = '{} {:.2f}-{}'.format(predicted_class, score,count)
-            draw = ImageDraw.Draw(image)
-            label_size = draw.textsize(label, font)
-            label = label.encode('utf-8')
-            # print(label)
+                # 画框框
+                label = '{} {:.2f}-{}'.format(predicted_class, score, count)
+                draw = ImageDraw.Draw(self.image)
+                label_size = draw.textsize(label, font)
+                label = label.encode('utf-8')
+                self.msg.emit(str(label.decode()))
 
-            if top - label_size[1] >= 0:
-                text_origin = np.array([left, top - label_size[1]])
-            else:
-                text_origin = np.array([left, top + 1])
+                if top - label_size[1] >= 0:
+                    text_origin = np.array([left, top - label_size[1]])
+                else:
+                    text_origin = np.array([left, top + 1])
 
-            for i in range(thickness):
+                for i in range(thickness):
+                    draw.rectangle(
+                        [left + i, top + i, right - i, bottom - i],
+                        outline=self.colors[self.class_names.index(predicted_class)])
                 draw.rectangle(
-                    [left + i, top + i, right - i, bottom - i],
-                    outline=self.colors[self.class_names.index(predicted_class)])
-            draw.rectangle(
-                [tuple(text_origin), tuple(text_origin + label_size)],
-                fill=self.colors[self.class_names.index(predicted_class)])
-            draw.text(text_origin, str(label, 'UTF-8'), fill=(0, 0, 0), font=font)
-            del draw
-        return image
+                    [tuple(text_origin), tuple(text_origin + label_size)],
+                    fill=self.colors[self.class_names.index(predicted_class)])
+                draw.text(text_origin, str(label, 'UTF-8'), fill=(0, 0, 0), font=font)
+                del draw
+            self.msg.emit("图中一共有:" + str(count) + " 个 目标对象")
+            self.path = "neural_network/img/2.png"
+            self.image.save(self.path)
+            self.set_image.emit(self.path)
+            self.msg.emit("预测完成")
 
-def predict(img):
-    predict = SSD()
-    try:
-        image = Image.open(img)
-    except:
-        exit(1)
-    else:
-        r_image = predict.detect_image(image)
-        # r_image.show()
-        path="neural_network/img/2.png"
-        r_image.save(path)
-        return path
+
