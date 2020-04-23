@@ -5,11 +5,14 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QRegExp
+
+from nets.ssd import get_ssd
 from utils.config import Config
 from neural_network.utils.voc_annotation import voc
 from neural_network.predict import SSD
 from neural_network.train import train
 from PIL import Image
+from mid_module import summary
 
 
 class fnc(QMainWindow):
@@ -19,9 +22,6 @@ class fnc(QMainWindow):
         self.main_ui.setupUi(self)
         self.img = ""
         self.train_start = train()
-        self.predict_start=SSD()
-        self.predict_start.set_image.connect(self.set_image)
-        self.predict_start.msg.connect(self.predict_msg)
         self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.image)
         self.main_ui.pushButton.clicked.connect(self.headline)
@@ -35,7 +35,17 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_15.clicked.connect(self.check)
         self.main_ui.pushButton_16.clicked.connect(self.train)
         self.main_ui.pushButton_17.clicked.connect(self.stop_train)
+        self.main_ui.pushButton_18.clicked.connect(self.structure)
 
+
+    def structure(self):
+        model = get_ssd("train", Config["num_classes"])
+        self.structure_start = summary()
+        self.structure_start.msg.connect(self.structure_msg)
+        self.structure_start.summary(model, input_size=(3, Config["min_dim"],  Config["min_dim"]))
+
+    def structure_msg(self,msg):
+        self.main_ui.textEdit_2.append(msg)
 
 
     def stop_train(self):
@@ -71,6 +81,8 @@ class fnc(QMainWindow):
         self.train_start.start()
 
     def predict(self):
+        self.predict_start.set_image.connect(self.set_image)
+        self.predict_start.msg.connect(self.predict_msg)
         self.main_ui.textEdit.append("开始预测......")
         img = self.img
         try:
@@ -132,17 +144,19 @@ class fnc(QMainWindow):
 
     def module(self):
         Fname, _ = QFileDialog.getOpenFileName(self, "打开文件", ".", "模型文件(*.pth)")
-        if Fname!="":
-            back=Config["model_path"]
-            self.main_ui.label_5.setText("模型路径："+ Fname)
-            Config["model_path"]=Fname
+        if Fname != "":
+            self.main_ui.label_5.setText("模型路径：" + Fname)
+            Config["model_path"] = Fname
             try:
-                self.predict_start.generate()
+                self.predict_start = SSD()
             except:
                 self.main_ui.textEdit.append("模型中类别不匹配，请更换模型或更改类别参数")
-                Config["model_path"]=back
-                self.predict_start.generate()
+                self.main_ui.pushButton_10.setEnabled(False)
+                self.main_ui.pushButton_12.setEnabled(False)
+            else:
                 self.main_ui.label_5.setText("模型路径：" + Config["model_path"])
+                self.main_ui.pushButton_10.setEnabled(True)
+
 
 
 

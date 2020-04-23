@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1129</width>
-    <height>873</height>
+    <height>849</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <property name="contextMenuPolicy">
@@ -255,7 +255,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>230</y>
+        <y>360</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -271,7 +271,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>310</y>
+        <y>480</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -300,7 +300,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>360</y>
+        <y>530</y>
         <width>151</width>
         <height>41</height>
        </rect>
@@ -309,64 +309,37 @@
        <string>中止训练</string>
       </property>
      </widget>
-     <widget class="QFrame" name="frame_3">
+     <widget class="QPushButton" name="pushButton_18">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>260</y>
+        <width>151</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>查看网络结构</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit_2">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
-        <x>270</x>
-        <y>20</y>
-        <width>801</width>
-        <height>601</height>
+        <x>220</x>
+        <y>30</y>
+        <width>871</width>
+        <height>541</height>
        </rect>
       </property>
-      <property name="styleSheet">
-       <string notr="true"/>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+      <property name="acceptRichText">
+       <bool>true</bool>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Sunken</enum>
-      </property>
-      <widget class="QLabel" name="label_6">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>801</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="lineWidth">
-        <number>2</number>
-       </property>
-       <property name="midLineWidth">
-        <number>3</number>
-       </property>
-       <property name="text">
-        <string>没有图像</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::AutoText</enum>
-       </property>
-       <property name="scaledContents">
-        <bool>false</bool>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="margin">
-        <number>0</number>
-       </property>
-       <property name="indent">
-        <number>-1</number>
-       </property>
-      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
@@ -374,6 +347,9 @@
       <string>图片预测</string>
      </attribute>
      <widget class="QPushButton" name="pushButton_10">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>40</x>

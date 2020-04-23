@@ -31,13 +31,13 @@ class train(QThread):
         Start_iter = Config["Start_iter"]
         model = get_ssd("train", Config["num_classes"])
 
-        print('Loading weights into state dict...')
+        self.msg.emit('将权重加载到字典中......')
         model_dict = model.state_dict()
         pretrained_dict = torch.load(Config['migrate_path'], map_location=torch.device('cpu'))
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) == np.shape(v)}
         model_dict.update(pretrained_dict)
         model.load_state_dict(model_dict)
-        print('Finished!')
+        self.msg.emit('完成')
 
         net = model
         if Cuda:
