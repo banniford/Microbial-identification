@@ -13,6 +13,7 @@ from neural_network.predict import SSD
 from neural_network.train import train
 from PIL import Image
 from mid_module import summary
+import serial # 串口通信连接arduino模块
 
 
 class fnc(QMainWindow):
@@ -23,9 +24,10 @@ class fnc(QMainWindow):
         self.img = ""
         self.train_start = train()
         self.train_start.msg.connect(self.train_msg)
-        self.main_ui.pushButton_7.clicked.connect(self.image)
+        self.main_ui.pushButton_7.clicked.connect(self.control)
         self.main_ui.pushButton.clicked.connect(self.headline)
-        self.main_ui.pushButton_8.clicked.connect(self.close)
+        self.main_ui.pushButton_8.clicked.connect(self.close_control)
+        self.main_ui.pushButton_8.clicked.connect(self.collect)
         self.main_ui.label_4.setText("模型路径："+ Config["migrate_path"])
         self.main_ui.label_5.setText("模型路径："+ Config["model_path"])
         self.main_ui.pushButton_10.clicked.connect(self.open_image)
@@ -37,12 +39,15 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_17.clicked.connect(self.stop_train)
         self.main_ui.pushButton_18.clicked.connect(self.structure)
 
+    def collect(self):
+        pass
+
 
     def structure(self):
         model = get_ssd("train", Config["num_classes"])
         self.structure_start = summary()
         self.structure_start.msg.connect(self.structure_msg)
-        self.structure_start.summary(model, input_size=(3, Config["min_dim"],  Config["min_dim"]))
+        self.structure_start.summary(model, input_size=(3, Config["min_dim"],  Config["min_dim"]),batch_size=Config["Batch_size"])
 
     def structure_msg(self,msg):
         self.main_ui.textEdit_2.append(msg)
@@ -53,6 +58,7 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_13.setEnabled(True)
         self.main_ui.pushButton_14.setEnabled(True)
         self.main_ui.pushButton_15.setEnabled(True)
+        self.main_ui.pushButton_18.setEnabled(True)
         self.main_ui.pushButton_16.setEnabled(False)
         self.main_ui.pushButton_17.setEnabled(False)
         self.main_ui.textEdit.append("正在退出......请稍等")
@@ -62,11 +68,6 @@ class fnc(QMainWindow):
     def predict_msg(self,msg):
         self.main_ui.textEdit.append(msg)
 
-    def set_image(self,path):
-        if path=="":
-            self.main_ui.label_3.setPixmap(QPixmap(self.img))
-        else:
-            self.main_ui.label_3.setPixmap(QPixmap(path))
 
     def train_msg(self,msg):
         self.main_ui.textEdit.append(msg)
@@ -76,13 +77,18 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_13.setEnabled(False)
         self.main_ui.pushButton_14.setEnabled(False)
         self.main_ui.pushButton_15.setEnabled(False)
+        self.main_ui.pushButton_18.setEnabled(False)
+        self.main_ui.pushButton_17.setEnabled(True)
         self.train_start.flag = True
         self.main_ui.textEdit.append("训练开始......")
-        self.train_start.start()
+        try:
+            self.train_start.start()
+        except:
+            self.train_start.flag = False
+            self.main_ui.textEdit.append("训练参数有误")
 
     def predict(self):
-        self.predict_start.set_image.connect(self.set_image)
-        self.predict_start.msg.connect(self.predict_msg)
+
         self.main_ui.textEdit.append("开始预测......")
         img = self.img
         try:
@@ -97,25 +103,37 @@ class fnc(QMainWindow):
 
 
     def headline(self):
-        #摄像头检测
-        self.main_ui.pushButton.setEnabled(False)
-        self.main_ui.label.setText("摄像头已连接")
+        #摄像头检测和连接
+        try:
+            pixmap = QPixmap('C:\\Users\some\Desktop\（毕设）全自动捕捉显微镜\深度学习资料\pyqt\\ui\image\\aaqa.jpg')
+            self.main_ui.label_2.setPixmap(pixmap)
+        except:
+            self.main_ui.textEdit.append("检测不到摄像头")
+        else:
+            self.main_ui.pushButton_9.setEnabled(True)
+            self.main_ui.pushButton.setEnabled(False)
+            self.main_ui.label.setText("摄像头已连接")
 
 
-    def image(self):
-        # 摄像头获取
-        pixmap = QPixmap('C:\\Users\some\Desktop\（毕设）全自动捕捉显微镜\深度学习资料\pyqt\\ui\image\\aaqa.jpg')
-        self.main_ui.label_2.setPixmap(pixmap)
-        self.main_ui.pushButton_7.setEnabled(False)
-        self.main_ui.pushButton_8.setEnabled(True)
-        self.main_ui.pushButton_2.setEnabled(True)
-        self.main_ui.pushButton_3.setEnabled(True)
-        self.main_ui.pushButton_4.setEnabled(True)
-        self.main_ui.pushButton_5.setEnabled(True)
-        self.main_ui.pushButton_6.setEnabled(True)
-        self.main_ui.pushButton_9.setEnabled(True)
 
-    def close(self):
+
+    def control(self):
+        # 连接arduino
+        try:
+            self.ser = serial.Serial("/dev/ttyUSB0", 9600)
+        except:
+            self.main_ui.textEdit.append("无法连接arduino")
+        else:
+            self.main_ui.pushButton_7.setEnabled(False)
+            self.main_ui.pushButton_8.setEnabled(True)
+            self.main_ui.pushButton_2.setEnabled(True)
+            self.main_ui.pushButton_3.setEnabled(True)
+            self.main_ui.pushButton_4.setEnabled(True)
+            self.main_ui.pushButton_5.setEnabled(True)
+            self.main_ui.pushButton_6.setEnabled(True)
+
+
+    def close_control(self):
         self.main_ui.pushButton_7.setEnabled(True)
         self.main_ui.pushButton_8.setEnabled(False)
         self.main_ui.pushButton_2.setEnabled(False)
@@ -154,18 +172,25 @@ class fnc(QMainWindow):
                 self.main_ui.pushButton_10.setEnabled(False)
                 self.main_ui.pushButton_12.setEnabled(False)
             else:
+                self.predict_start.set_image.connect(self.set_image)
+                self.predict_start.msg.connect(self.predict_msg)
                 self.main_ui.label_5.setText("模型路径：" + Config["model_path"])
                 self.main_ui.pushButton_10.setEnabled(True)
 
-
+    def set_image(self,path):
+        if path=="":
+            self.main_ui.label_3.setPixmap(QPixmap(self.img))
+        else:
+            self.main_ui.label_3.setPixmap(QPixmap(path))
 
 
 
 
     def check(self):
+        # ！！！
         voc()
         self.main_ui.pushButton_16.setEnabled(True)
-        self.main_ui.pushButton_17.setEnabled(True)
+
 
 
 
@@ -175,7 +200,6 @@ class parameters(QWidget):
         self.configtext=[]
         self.widget_ui=parameter.Ui_Form()
         self.widget_ui.setupUi(self)
-        self.widget_ui.label_5.setText("min_dim：%s" % (Config["min_dim"]))
         self.widget_ui.label_6.setText("confidence：%s" % (Config["confidence"]))
         self.widget_ui.label_7.setText("Cuda：%s" % (Config["Cuda"]))
         self.widget_ui.label_8.setText("Epoch：%s" % (Config["Epoch"]))
@@ -185,7 +209,6 @@ class parameters(QWidget):
         self.widget_ui.label_12.setText("lr：%s" % (Config["lr"]))
         self.widget_ui.label_2.setText("loc_loss：%s" % (Config["loc_loss"]))
         self.widget_ui.label_3.setText("conf_loss：%s" % (Config["conf_loss"]))
-        self.widget_ui.lineEdit.setPlaceholderText("100-1000")
         self.widget_ui.lineEdit_2.setPlaceholderText("0-0.9")
         self.widget_ui.lineEdit_3.setPlaceholderText("1-500")
         self.widget_ui.lineEdit_4.setPlaceholderText("0-1")
@@ -198,7 +221,6 @@ class parameters(QWidget):
         self.widget_ui.pushButton.clicked.connect(self.close)
         self.widget_ui.pushButton_2.clicked.connect(self.close)
         # 校验
-        self.widget_ui.lineEdit.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_3.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_6.editingFinished.connect(self.enter_line)
         self.widget_ui.lineEdit_2.editingFinished.connect(self.enter_line)
@@ -223,14 +245,6 @@ class parameters(QWidget):
         self.widget_ui.lineEdit_7.setValidator(validator)
 
     def enter_line(self):
-        if self.widget_ui.lineEdit.text() != "" and not(self.widget_ui.lineEdit.text().isdigit()):
-            self.widget_ui.lineEdit.setText(str(Config["min_dim"]))
-        if self.widget_ui.lineEdit.text() !="" and self.widget_ui.lineEdit.text().isdigit():
-            edit1=int(self.widget_ui.lineEdit.text())
-            if edit1<100:
-                self.widget_ui.lineEdit.setText("100")
-            elif edit1>1000:
-                self.widget_ui.lineEdit.setText("1000")
 
         if self.widget_ui.lineEdit_3.text() != "" and not(self.widget_ui.lineEdit_3.text().isdigit()):
             self.widget_ui.lineEdit_3.setText(str(Config["Epoch"]))
@@ -300,11 +314,6 @@ class parameters(QWidget):
 
     def right(self):
 
-        if self.widget_ui.lineEdit.text() != "":
-            # line1 = self.widget_ui.lineEdit.text()
-            # print(line1)
-            Config["min_dim"]=int(self.widget_ui.lineEdit.text())
-            self.widget_ui.label_5.setText("min_dim：%s" % (Config["min_dim"]))
 
         if self.widget_ui.radioButton.isChecked()==True:
             Config["Cuda"]=True

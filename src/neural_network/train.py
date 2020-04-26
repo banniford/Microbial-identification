@@ -37,7 +37,7 @@ class train(QThread):
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) == np.shape(v)}
         model_dict.update(pretrained_dict)
         model.load_state_dict(model_dict)
-        self.msg.emit('完成')
+        self.msg.emit('完成加载')
 
         net = model
         if Cuda:

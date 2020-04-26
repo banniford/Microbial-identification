@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1129, 849)
+        MainWindow.resize(1129, 876)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(800, 0))
         self.centralwidget.setObjectName("centralwidget")
@@ -163,7 +163,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -175,8 +175,8 @@ class Ui_MainWindow(object):
         self.pushButton_5.setText(_translate("MainWindow", "下移镜头"))
         self.pushButton_6.setText(_translate("MainWindow", "自动对焦"))
         self.label_2.setText(_translate("MainWindow", "没有图像"))
-        self.pushButton_8.setText(_translate("MainWindow", "关闭摄像头"))
-        self.pushButton_7.setText(_translate("MainWindow", "连接摄像头"))
+        self.pushButton_8.setText(_translate("MainWindow", "关闭控制器"))
+        self.pushButton_7.setText(_translate("MainWindow", "连接控制器"))
         self.pushButton_9.setText(_translate("MainWindow", "采集图片"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "图像展示"))
         self.pushButton_13.setText(_translate("MainWindow", "设置模型参数"))
