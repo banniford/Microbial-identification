@@ -27,7 +27,7 @@ def voc():
     indx = ('python neural_network/VOCdevkit/VOC2007/voc2ssd.py')
     p = os.system(indx)
     sets = [('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
-    print(p)
+    # print(p) 运行成功会返回0
 
     with open('neural_network/model_data/voc_classes.txt', 'r') as f:
         for line in f.readlines():  # 依次读取每行

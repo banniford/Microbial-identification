@@ -194,4 +194,4 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "TextLabel"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), _translate("MainWindow", "图片预测"))
         self.label.setText(_translate("MainWindow", "摄像头未开启"))
-        self.pushButton.setText(_translate("MainWindow", "检测摄像头"))
+        self.pushButton.setText(_translate("MainWindow", "打开摄像头"))

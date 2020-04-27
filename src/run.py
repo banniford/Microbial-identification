@@ -1,10 +1,11 @@
 import sys
+import cv2
 import Microbial
 import parameter
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtGui import *
-from PyQt5.QtCore import QRegExp
+from PyQt5.QtCore import QRegExp, QTimer
 
 from nets.ssd import get_ssd
 from utils.config import Config
@@ -13,6 +14,8 @@ from neural_network.predict import SSD
 from neural_network.train import train
 from PIL import Image
 from mid_module import summary
+from arduino_control import Video
+
 import serial # 串口通信连接arduino模块
 
 
@@ -25,7 +28,6 @@ class fnc(QMainWindow):
         self.train_start = train()
         self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.control)
-        self.main_ui.pushButton.clicked.connect(self.headline)
         self.main_ui.pushButton_8.clicked.connect(self.close_control)
         self.main_ui.pushButton_8.clicked.connect(self.collect)
         self.main_ui.label_4.setText("模型路径："+ Config["migrate_path"])
@@ -39,8 +41,52 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_17.clicked.connect(self.stop_train)
         self.main_ui.pushButton_18.clicked.connect(self.structure)
 
+        self.timer_camera =QTimer()  # 初始化定时器
+        # self.cap = cv2.VideoCapture()  # 初始化摄像头
+        self.video = Video(cv2.VideoCapture(0))
+        self.timer_camera.timeout.connect(self.show_camera)
+        self.main_ui.pushButton.clicked.connect(self.headline)
+
+    def show_camera(self):
+        self.video.captureNextFrame()
+        self.Frame_img=self.video.convertFrame()
+        self.main_ui.label_2.setPixmap(QPixmap.fromImage(self.Frame_img))
+
+
+
+    def headline(self):
+        if self.timer_camera.isActive() == False:
+            # flag = self.cap.open(0)
+            flag=self.video.capture.open(0)
+            if flag == False:
+                self.main_ui.textEdit.append("检测不到摄像头")
+            else:
+                self.timer_camera.start(30)
+                self.main_ui.pushButton_9.setEnabled(True)
+                self.main_ui.label.setText("摄像头已连接")
+                self.main_ui.pushButton.setText('关闭摄像头')
+        else:
+            self.timer_camera.stop()
+            self.video.capture.release()
+            self.main_ui.pushButton_9.setEnabled(False)
+            self.main_ui.pushButton.setText('打开摄像头')
+            self.main_ui.label.setText("摄像头未连接")
+
+        #摄像头检测和连接
+        # try:
+        #     self.video = Video(cv2.VideoCapture(0))
+        #     self.video.captureNextFrame()
+        #     self.main_ui.label_2.setPixmap(self.video.convertFrame())
+        # except:
+        #     self.main_ui.textEdit.append("检测不到摄像头")
+        # else:
+        #     self.main_ui.pushButton_9.setEnabled(True)
+        #     self.main_ui.pushButton.setEnabled(False)
+        #     self.main_ui.label.setText("摄像头已连接")
+
+
     def collect(self):
-        pass
+        self.Frame_img.save("neural_network/VOCdevkit/VOC2007/JPEGImages/1.jpg")
 
 
     def structure(self):
@@ -102,19 +148,11 @@ class fnc(QMainWindow):
 
 
 
-    def headline(self):
-        #摄像头检测和连接
-        try:
-            pixmap = QPixmap('C:\\Users\some\Desktop\（毕设）全自动捕捉显微镜\深度学习资料\pyqt\\ui\image\\aaqa.jpg')
-            self.main_ui.label_2.setPixmap(pixmap)
-        except:
-            self.main_ui.textEdit.append("检测不到摄像头")
-        else:
-            self.main_ui.pushButton_9.setEnabled(True)
-            self.main_ui.pushButton.setEnabled(False)
-            self.main_ui.label.setText("摄像头已连接")
 
-
+    # img = cv2.imread('neural_network/img/1.jpg')
+    # 清晰度判断
+    def variance_of_laplacian(image):
+        return cv2.Laplacian(image, cv2.CV_64F).var()
 
 
     def control(self):
