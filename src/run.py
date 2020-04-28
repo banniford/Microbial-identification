@@ -49,7 +49,7 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_20.clicked.connect(self.up_Y)
         self.main_ui.pushButton_19.clicked.connect(self.down_Y)
 
-        self.timer_camera =QTimer()  # 初始化定时器
+        self.timer_camera =QTimer(self)  # 初始化定时器
         # self.cap = cv2.VideoCapture()  # 初始化摄像头
         self.video = Video(cv2.VideoCapture(0))
         self.timer_camera.timeout.connect(self.show_camera)
