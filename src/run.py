@@ -29,7 +29,7 @@ class fnc(QMainWindow):
         self.train_start.msg.connect(self.train_msg)
         self.main_ui.pushButton_7.clicked.connect(self.control)
         self.main_ui.pushButton_8.clicked.connect(self.close_control)
-        self.main_ui.pushButton_8.clicked.connect(self.collect)
+        self.main_ui.pushButton_9.clicked.connect(self.collect)
         self.main_ui.label_4.setText("模型路径："+ Config["migrate_path"])
         self.main_ui.label_5.setText("模型路径："+ Config["model_path"])
         self.main_ui.pushButton_10.clicked.connect(self.open_image)
@@ -40,6 +40,14 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_16.clicked.connect(self.train)
         self.main_ui.pushButton_17.clicked.connect(self.stop_train)
         self.main_ui.pushButton_18.clicked.connect(self.structure)
+
+        self.main_ui.pushButton_2.clicked.connect(self.up_Z)
+        self.main_ui.pushButton_3.clicked.connect(self.left)
+        self.main_ui.pushButton_4.clicked.connect(self.right)
+        self.main_ui.pushButton_5.clicked.connect(self.down_Z)
+        self.main_ui.pushButton_6.clicked.connect(self.auto_control)
+        self.main_ui.pushButton_2.clicked.connect(self.up_Y)
+        self.main_ui.pushButton_5.clicked.connect(self.down_Y)
 
         self.timer_camera =QTimer()  # 初始化定时器
         # self.cap = cv2.VideoCapture()  # 初始化摄像头
@@ -56,7 +64,6 @@ class fnc(QMainWindow):
 
     def headline(self):
         if self.timer_camera.isActive() == False:
-            # flag = self.cap.open(0)
             flag=self.video.capture.open(0)
             if flag == False:
                 self.main_ui.textEdit.append("检测不到摄像头")
@@ -146,15 +153,6 @@ class fnc(QMainWindow):
             self.predict_start.image=image
             self.predict_start.start()
 
-
-
-
-    # img = cv2.imread('neural_network/img/1.jpg')
-    # 清晰度判断
-    def variance_of_laplacian(image):
-        return cv2.Laplacian(image, cv2.CV_64F).var()
-
-
     def control(self):
         # 连接arduino
         try:
@@ -179,9 +177,97 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_4.setEnabled(False)
         self.main_ui.pushButton_5.setEnabled(False)
         self.main_ui.pushButton_6.setEnabled(False)
-        self.main_ui.pushButton_9.setEnabled(False)
         self.main_ui.label_2.setPixmap(QPixmap(None))
         self.main_ui.label_2.setText("没有图像")
+
+    def up_Y(self):
+        str1="a"
+        self.ser.write(str1.encode('utf-8'))
+
+
+    def down_Y(self):
+        str1 ="b"
+        self.ser.write(str1.encode('utf-8'))
+        self.ser.flushInput()
+
+    def up_Z(self):
+        str1="i"
+        self.ser.write(str1.encode('utf-8'))
+        self.ser.flushInput()
+
+
+    def down_Z(self):
+        str1 = "j"
+        self.ser.write(str1.encode('utf-8'))
+        self.ser.flushInput()
+
+    def left(self):
+        str1 = "e"
+        self.ser.write(str1.encode('utf-8'))
+        self.ser.flushInput()
+
+
+    def right(self):
+        str1 = "f"
+        self.ser.write(str1.encode('utf-8'))
+        self.ser.flushInput()
+
+
+    def auto_control(self):
+        i = 0
+        a = 'j'
+        b = 'l'
+        c = 'n'
+        d = 'm'
+        definition = self.variance_of_laplacian(self.Frame_img)
+        if not definition:
+            self.main_ui.textEdit.append("图片清晰度出错")
+        else:
+            if float(definition) < 10.0:
+                i = i + 1
+                print(i)
+                if i > 10.0:
+                    print(definition)
+                    self.ser.write(a.encode('utf-8'))  # 向串口写‘a’，arduino接受
+                    self.ser.flushInput()  # 清除缓存器
+                    i = 0
+            elif 10.0 <= float(definition) <= 20.0:
+                i = i + 1
+                if i > 10:
+                    print(definition)
+                    self.ser.write(a.encode('utf-8'))
+                    self.ser.flushInput()
+                    i = 0
+            elif 20.0 <= float(definition) <= 30.0:
+                i = i + 1
+                if i > 7:
+                    print(definition)
+                    self.ser.write(b.encode('utf-8'))
+                    self.ser.flushInput()
+                    i = 0
+            elif 30.0 <= float(definition) < 50.0:
+                i = i + 1
+                if i > 5:
+                    print(definition)
+                    self.ser.write(c.encode('utf-8'))
+                    self.ser.flushInput()
+                    i = 0
+            elif float(definition) > 50.0:
+                print(definition)
+                self.main_ui.textEdit.append("完成对焦")
+                self.ser.write(d.encode('utf-8'))
+                self.ser.flushInput()
+                self.ser.close()  # 关闭端口
+
+
+    # img = cv2.imread('neural_network/img/1.jpg')
+    # 清晰度判断
+    # img = cv2.imread('neural_network/img/1.jpg')
+    # d = self.variance_of_laplacian(img)
+    # self.main_ui.textEdit.append(str(d))
+    def variance_of_laplacian(self,image):
+        return cv2.Laplacian(image, cv2.CV_64F).var()
+
 
     def open_image(self):
         Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png)")
