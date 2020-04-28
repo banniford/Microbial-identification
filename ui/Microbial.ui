@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1129</width>
-    <height>849</height>
+    <height>876</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <property name="contextMenuPolicy">
@@ -48,14 +48,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>108</x>
+        <x>102</x>
         <y>137</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>上移镜头</string>
+       <string>Z轴上移镜头</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_3">
@@ -64,14 +64,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>14</x>
         <y>180</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>左移镜头</string>
+       <string>X轴左移镜头</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_4">
@@ -80,14 +80,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>197</x>
+        <x>190</x>
         <y>180</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>右移镜头</string>
+       <string>X轴右移镜头</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_5">
@@ -96,14 +96,14 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>108</x>
+        <x>102</x>
         <y>223</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>下移镜头</string>
+       <string>Z轴下移镜头</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_6">
@@ -112,9 +112,9 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>108</x>
+        <x>102</x>
         <y>180</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
@@ -184,8 +184,8 @@
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>270</y>
+        <x>50</x>
+        <y>300</y>
         <width>204</width>
         <height>191</height>
        </rect>
@@ -197,14 +197,14 @@
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>关闭摄像头</string>
+          <string>关闭控制器</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="pushButton_7">
          <property name="text">
-          <string>连接摄像头</string>
+          <string>连接控制器</string>
          </property>
         </widget>
        </item>
@@ -219,6 +219,38 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QPushButton" name="pushButton_19">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>260</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Y轴下移镜头</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_20">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>104</x>
+        <y>100</y>
+        <width>81</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Y轴上移镜头</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -488,7 +520,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>检测摄像头</string>
+     <string>打开摄像头</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="textEdit">
