@@ -4,11 +4,10 @@ import datetime as d #时间模块
 import serial #串口通信连接arduino模块
 import cv2
 import numpy as np
-import sys
+
 
 from PyQt5.QtGui import QImage, QPixmap
 
-    # ser = serial.Serial("/dev/ttyUSB0", 9600)#打开9600通信
 
 class Video():
 
@@ -30,8 +29,9 @@ class Video():
         try:
             # 将视频转换为qt能接受的图片格式
             height, width = self.currentFrame.shape[:2]
-            img = QImage(self.currentFrame, width, height, QImage.Format_RGB888)
-            # img = QPixmap.fromImage(img)
+            img = QImage(self.currentFrame.data, width, height, QImage.Format_RGB888)
+            #将QIamg对象转为QPixmap对象
+            img = QPixmap.fromImage(img)
             return img
         except:
             return None

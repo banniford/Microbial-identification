@@ -30,6 +30,7 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_7.clicked.connect(self.control)
         self.main_ui.pushButton_8.clicked.connect(self.close_control)
         self.main_ui.pushButton_9.clicked.connect(self.collect)
+        self.conunt=0
         self.main_ui.label_4.setText("模型路径："+ Config["migrate_path"])
         self.main_ui.label_5.setText("模型路径："+ Config["model_path"])
         self.main_ui.pushButton_10.clicked.connect(self.open_image)
@@ -58,7 +59,7 @@ class fnc(QMainWindow):
     def show_camera(self):
         self.video.captureNextFrame()
         self.Frame_img=self.video.convertFrame()
-        self.main_ui.label_2.setPixmap(QPixmap.fromImage(self.Frame_img))
+        self.main_ui.label_2.setPixmap(self.Frame_img)
 
 
 
@@ -93,7 +94,8 @@ class fnc(QMainWindow):
 
 
     def collect(self):
-        self.Frame_img.save("neural_network/VOCdevkit/VOC2007/JPEGImages/1.jpg")
+        self.conunt+=1
+        self.Frame_img.save("neural_network/VOCdevkit/VOC2007/JPEGImages/%s.jpg"%(self.conunt))
 
 
     def structure(self):
