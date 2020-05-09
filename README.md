@@ -7,65 +7,9 @@
 
 本项目主要使用arduino+Raspberry Pi 3B+deep learning（SSD网络）+python3 实现微生物图像识别。
 
-项目结构
+**项目结构**
 
-├─src
-│  │  arduino_control.py
-│  │  Microbial.py
-│  │  mid_module.py
-│  │  parameter.py
-│  │  run.py （主程序）
-│  │ 
-│  └─neural_network
-│      │  2007_test.txt
-│      │  2007_train.txt
-│      │  2007_val.txt
-│      │  predict.py
-│      │  train.py
-│      │ 
-│      ├─img（预测图片存放）
-│      │      save_predict_img.md
-│      │ 
-│      ├─model_data （字体/迁移模型/类别）
-│      │      README.md
-│      │      simhei.ttf
-│      │      ssd_weights.pth（迁移模型）
-│      │      voc_classes.txt
-│      │ 
-│      ├─nets（ssd网络）
-│      │      README.md
-│      │      ssd.py
-│      │      ssd_layers.py
-│      │      ssd_training.py
-│      │      vgg.py
-│      │      原理图.png
-│      │ 
-│      ├─outputs
-│      │      Epoch10-Loc0.7121-Conf2.2285.pth（训练后模型）
-│      │      README.md
-│      │ 
-│      ├─utils （预测框生成/配置文件/数据集生成索引）
-│      │      box_utils.py
-│      │      config.py
-│      │      voc_annotation.py
-│      │ 
-│      └─VOCdevkit（训练集）
-│          └─VOC2007
-│              │  voc2ssd.py
-│              │ 
-│              ├─Annotations（标签样本）
-│              ├─ImageSets（索引）
-│              │  └─Main
-│              │          test.txt
-│              │          train.txt
-│              │          trainval.txt
-│              │          val.txt
-│              │ 
-│              └─JPEGImages（图片样本）
-└─ui（ui文件）
-        Microbial.ui
-        parameter.ui
-        README.md
+![](doc/tree.png)
 
 ## 使用框架及工具包：
 
