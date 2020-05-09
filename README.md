@@ -32,7 +32,7 @@
 
 2）准备数据集并放置与 `VOCdevkit/VOC2007/JPEGImages` 文件夹下
 
-3)   使用labimg生成与`VOCdevkit/VOC2007/JPEGImages`内图片对应的标签文件并存放于`VOCdevkit/VOC2007/Annotations`内
+3） 使用labimg生成与`VOCdevkit/VOC2007/JPEGImages`内图片对应的标签文件并存放于`VOCdevkit/VOC2007/Annotations`内
 
 4） 启动`run.py` 在`模型训练`页面设置参数以及标签名称，一定要与标签文件内标注名称对应，多个标签空格隔开
 
