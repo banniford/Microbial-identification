@@ -1,7 +1,3 @@
-import socket #通信模块
-import sys #系统模块
-import datetime as d #时间模块
-import serial #串口通信连接arduino模块
 import cv2
 import numpy as np
 
@@ -36,8 +32,6 @@ class Video():
         except:
             return None
 
-class Control():
-    pass
 
 # a,b=Video(cv2.VideoCapture(0)).captureFrame()
 # print(a,b)
