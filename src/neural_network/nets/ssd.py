@@ -43,7 +43,7 @@ class SSD(nn.Module):
 
         # 获得后面的内容
         for k, v in enumerate(self.extras):
-            x = F.relu(v(x), inplace=True)
+            x = F.relu(v(x), inplace=True)# 这里加了relu所以在网络中没有显示
             if k % 2 == 1:
                 sources.append(x)
 
