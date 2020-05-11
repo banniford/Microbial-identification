@@ -29,17 +29,17 @@ class SSD(nn.Module):
         loc = list()
         conf = list()
 
-        # 获得conv4_3的内容 relu层也算 Pooling不进行relu 一共36层
+        # 获得conv4_3的内容 relu层也算 Pooling不进行relu 一共36层 0-22=1-23
         for k in range(23):# 22层
             x = self.vgg[k](x)
 
-        s = self.L2Norm(x)# L2标准化 原因：深度不够
+        s = self.L2Norm(x)# L2标准化 原因：深度不够 24层
         sources.append(s)
 
         # 获得fc7的内容
-        for k in range(23, len(self.vgg)):#23-35
+        for k in range(23, len(self.vgg)):#23-34=24-35层
             x = self.vgg[k](x)
-        sources.append(x)
+        sources.append(x) #FC7_1
 
         # 获得后面的内容
         for k, v in enumerate(self.extras):
