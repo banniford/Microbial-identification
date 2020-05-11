@@ -37,7 +37,7 @@ class SSD(nn.Module):
         sources.append(s)
 
         # 获得fc7的内容
-        for k in range(23, len(self.vgg)):#23-34/5
+        for k in range(23, len(self.vgg)):#23-35
             x = self.vgg[k](x)
         sources.append(x)
 
