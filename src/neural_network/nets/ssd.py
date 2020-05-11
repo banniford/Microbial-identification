@@ -29,7 +29,7 @@ class SSD(nn.Module):
         loc = list()
         conf = list()
 
-        # 获得conv4_3的内容 relu层也算 Pooling不进行relu 一共35层
+        # 获得conv4_3的内容 relu层也算 Pooling不进行relu 一共36层
         for k in range(23):# 22层
             x = self.vgg[k](x)
 
