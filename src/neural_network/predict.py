@@ -1,9 +1,11 @@
 from PyQt5.QtCore import pyqtSignal,  QThread
+from distributed.protocol.tests.test_torch import torch
+
 from utils.config import Config
 import numpy as np
 import colorsys
 import os
-import torch
+# import torch
 from nets import ssd
 import torch.backends.cudnn as cudnn
 from utils.box_utils import letterbox_image,ssd_correct_boxes

@@ -1,8 +1,10 @@
 from random import shuffle
 import numpy as np
-import torch
+
 import torch.nn as nn
 import torch.nn.functional as F
+from distributed.protocol.tests.test_torch import torch
+
 from utils.config import Config
 from utils.box_utils import match, log_sum_exp
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb

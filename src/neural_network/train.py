@@ -1,9 +1,11 @@
 from PyQt5.QtCore import QThread, pyqtSignal
+from distributed.protocol.tests.test_torch import torch
+
 from nets.ssd import get_ssd
 from nets.ssd_training import Generator,MultiBoxLoss
 from utils.config import Config
 import torch.backends.cudnn as cudnn
-import torch
+# import torch
 import numpy as np
 import torch.optim as optim
 

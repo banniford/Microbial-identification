@@ -1,6 +1,6 @@
 import sys,os
 sys.path.append(sys.path[0]+"/../../")
-import random 
+import random
 from utils.config import Config
 
 

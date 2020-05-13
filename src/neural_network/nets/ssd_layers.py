@@ -1,7 +1,7 @@
 from __future__ import division
-import torch
 import torch.nn as nn
 import torch.nn.init as init
+from distributed.protocol.tests.test_torch import torch
 from torch.autograd import Function
 from math import sqrt as sqrt
 import numpy as np

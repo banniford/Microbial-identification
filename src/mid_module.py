@@ -1,10 +1,10 @@
-import torch
-import torch.nn as nn
 
+import torch.nn as nn
 
 from collections import OrderedDict
 import numpy as np
 from PyQt5.QtCore import pyqtSignal, QThread
+from distributed.protocol.tests.test_torch import torch
 
 
 class summary(QThread):

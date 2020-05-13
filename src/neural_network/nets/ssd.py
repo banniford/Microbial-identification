@@ -1,6 +1,8 @@
-import torch
+# import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from distributed.protocol.tests.test_torch import torch
+
 from utils.config import Config
 from nets.ssd_layers import Detect,L2Norm,PriorBox
 from nets.vgg import vgg as add_vgg

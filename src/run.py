@@ -4,8 +4,7 @@ import cv2
 import Microbial
 import parameter
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtGui import *
+from PyQt5.QtGui import QRegExpValidator, QPixmap
 from PyQt5.QtCore import QRegExp, QTimer
 
 from nets.ssd import get_ssd
@@ -317,6 +316,7 @@ class fnc(QMainWindow):
     def check(self):
         # ！！！
         voc()
+        self.main_ui.textEdit.append("校验完成")
         self.main_ui.pushButton_16.setEnabled(True)
 
 

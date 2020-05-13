@@ -1,7 +1,8 @@
 # 预测时画框工具
-import torch
+# import torch
 import numpy as np
 from PIL import Image
+from distributed.protocol.tests.test_torch import torch
 
 
 def point_form(boxes):
