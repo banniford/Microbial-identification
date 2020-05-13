@@ -51,9 +51,9 @@ class MultiBoxLoss(nn.Module):
             # 找到标签对应的先验框 ！！！
             match(self.threshold, truths, defaults, self.variance, labels,
                   loc_t, conf_t, idx)
-        if self.use_gpu:
-            loc_t = loc_t.cuda()
-            conf_t = conf_t.cuda()
+        # if self.use_gpu:
+        #     loc_t = loc_t.cuda()
+        #     conf_t = conf_t.cuda()
 
 
         # 所有conf_t>0的地方，代表内部包含物体
