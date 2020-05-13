@@ -1,4 +1,5 @@
 import sys
+sys.path.append(sys.path[0]+"\\neural_network") # 添加路径 导包，下面红线不用担心
 import cv2
 import Microbial
 import parameter
@@ -17,6 +18,7 @@ from mid_module import summary
 from arduino_control import Video
 
 import serial # 串口通信连接arduino模块
+
 
 
 class fnc(QMainWindow):

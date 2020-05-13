@@ -1,6 +1,8 @@
 #从VOC数据集的xml文件中提取位置信息并生成训练索引
+import sys
 import xml.etree.ElementTree as ET
 import os
+# print(sys.path)
 
 classes=[]
 

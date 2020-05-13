@@ -166,7 +166,8 @@ class SSD(QThread):
                 draw.text(text_origin, str(label, 'UTF-8'), fill=(0, 0, 0), font=font)
                 del draw
             self.msg.emit("图中一共有:" + str(count) + " 个 目标对象")
-            self.path = "neural_network/img/2.png"
+            # 可更改
+            self.path = "neural_network/img/predict_output.png"
             self.image.save(self.path)
             self.set_image.emit(self.path)
             self.msg.emit("预测完成")
