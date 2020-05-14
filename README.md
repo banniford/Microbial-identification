@@ -14,17 +14,35 @@
 ## 使用框架及工具包：
 
 - python 3.7.3
-- pytorch 1.4.0
-- PyQt5
-- numpy
-- PIL
-- opencv 3
-- serial (arduino通信)
+- torch==1.4.0
+- PyQt5==5.14.2
+- numpy==1.18.1
+- distributed==2.1.0
+- Pillow==7.1.2
+- opencv_python==4.2.0.32
+- pyserial==3.4 (arduino通信)
+- matplotlib==3.1.3
 - labalimg
 
  
 
 ## 使用说明
+
+### 运行
+
+- 安装环境
+
+在项目目录下安装所需包（首先需要有python3）
+
+```
+pip install -r requirements.txt
+```
+
+- 打开cmd 进入项目目录 运行主程序`Microbial-identification\src\run.py`
+
+```
+python3 run.py
+```
 
 ### 准备条件
 
