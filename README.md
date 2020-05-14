@@ -37,6 +37,10 @@
 ```
 pip install -r requirements.txt
 ```
+安装 pytorch
+```angular2
+pip install torch==1.4.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+```
 
 - 打开cmd 进入项目目录 运行主程序`Microbial-identification\src\run.py`
 
