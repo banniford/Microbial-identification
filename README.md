@@ -13,7 +13,7 @@
 
 ## 使用框架及工具包：
 
-- python 3.7.3
+- python 3.7.3 （64bit一定要64位，不然无法安装pytorch）
 - torch==1.4.0
 - PyQt5==5.14.2
 - numpy==1.18.1
@@ -37,9 +37,14 @@
 ```
 pip install -r requirements.txt
 ```
+安装wheel
+```angular2
+pip install wheel
+```
+
 安装 pytorch
 ```angular2
-pip install torch==1.4.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+pip install torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
 - 打开cmd 进入项目目录 运行主程序`Microbial-identification\src\run.py`

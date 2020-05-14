@@ -1,5 +1,5 @@
 from PyQt5.QtCore import pyqtSignal,  QThread
-from distributed.protocol.tests.test_torch import torch
+import torch
 
 from utils.config import Config
 import numpy as np
