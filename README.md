@@ -13,7 +13,7 @@
 
 ## 使用框架及工具包：
 
-- python 3.7.3 （64bit一定要64位，不然无法安装pytorch）
+- python 3.7.3 （64bit 一定要64位，不然无法安装pytorch）
 - torch==1.4.0
 - PyQt5==5.14.2
 - numpy==1.18.1

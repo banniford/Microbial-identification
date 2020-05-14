@@ -78,6 +78,8 @@ class fnc(QMainWindow):
             self.timer_camera.stop()
             self.video.capture.release()
             self.main_ui.pushButton_9.setEnabled(False)
+            self.main_ui.label_2.setPixmap(QPixmap(None))
+            self.main_ui.label_2.setText("没有图像")
             self.main_ui.pushButton.setText('打开摄像头')
             self.main_ui.label.setText("摄像头未连接")
 
@@ -180,8 +182,8 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_4.setEnabled(False)
         self.main_ui.pushButton_5.setEnabled(False)
         self.main_ui.pushButton_6.setEnabled(False)
-        self.main_ui.label_2.setPixmap(QPixmap(None))
-        self.main_ui.label_2.setText("没有图像")
+        # self.main_ui.label_2.setPixmap(QPixmap(None))
+        # self.main_ui.label_2.setText("没有图像")
 
     def up_Y(self):
         str1="a"
