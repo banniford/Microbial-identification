@@ -12,7 +12,7 @@ from utils.box_utils import letterbox_image,ssd_correct_boxes
 from PIL import ImageFont, ImageDraw
 
 # 数据集的RGB平均像素
-MEANS = (104, 117, 123)
+MEANS = (182, 177, 188)
 
 
 class SSD(QThread):

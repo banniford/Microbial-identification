@@ -11,7 +11,7 @@ from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 from PIL import Image
 
 # 平均像素值 需要计算出来！！
-MEANS = (104, 117, 123)
+MEANS = (182, 177, 188)
 
 
 class MultiBoxLoss(nn.Module):
