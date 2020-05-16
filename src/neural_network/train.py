@@ -12,6 +12,7 @@ import torch.optim as optim
 
 class train(QThread):
     msg = pyqtSignal(str)
+    finish= pyqtSignal(str)
 
 
     def __init__(self):
@@ -70,8 +71,8 @@ class train(QThread):
         for epoch in range(Start_iter, Epoch):
             if epoch % 10 == 0:
                 self.adjust_learning_rate(optimizer,lr, 0.95, epoch)
-            loc_loss = 0
-            conf_loss = 0
+            self.loc_loss = 0
+            self.conf_loss = 0
             for iteration in range(epoch_size):
                 if self.flag==True:
                     images, targets = next(gen)
@@ -94,28 +95,32 @@ class train(QThread):
                     optimizer.step()
 
                     # 加上
-                    loc_loss += loss_l.item()
-                    conf_loss += loss_c.item()
+                    self.loc_loss += loss_l.item()
+                    self.conf_loss += loss_c.item()
 
                     # print('\nEpoch:' + str(epoch + 1) + '/' + str(Epoch))
                     self.msg.emit('Epoch:' + str(epoch + 1) + '/' + str(Epoch))
                     loss = '|| Loc_Loss: %.4f || Conf_Loss: %.4f ||' % (
-                    loc_loss / (iteration + 1), conf_loss / (iteration + 1))
+                    self.loc_loss / (iteration + 1), self.conf_loss / (iteration + 1))
                     self.msg.emit('iter:' + str(iteration) + '/' + str(epoch_size) + str(loss))
                 else:
                     break
             else:
-                if loc_loss /(iteration + 1)<=Config["loc_loss"] and conf_loss / (iteration + 1)<=Config["conf_loss"]:
-                    ep = 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth' % (epoch + 1), loc_loss / (
-                                iteration + 1), conf_loss / (iteration + 1)
+                if self.loc_loss /(iteration + 1)<=Config["loc_loss"] and self.conf_loss / (iteration + 1)<=Config["conf_loss"]:
+                    ep = 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth' % (epoch + 1), self.loc_loss / (
+                                iteration + 1), self.conf_loss / (iteration + 1)
                     self.msg.emit('保存模型' + str(ep))
                     torch.save(model.state_dict(), 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth' % (
-                        (epoch + 1), loc_loss / (iteration + 1), conf_loss / (iteration + 1)))
+                        (epoch + 1), self.loc_loss / (iteration + 1), self.conf_loss / (iteration + 1)))
                 continue
             self.msg.emit('训练中止')
             break
         else:
-            self.msg.emit('训练完成')
+            ep='neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth' % ((epoch + 1), self.loc_loss / (iteration + 1), self.conf_loss / (iteration + 1))
+            self.msg.emit('保存最后模型' + str(ep))
+            torch.save(model.state_dict(), 'neural_network/outputs/Epoch%d-Loc%.4f-Conf%.4f.pth' % (
+                (epoch + 1), self.loc_loss / (iteration + 1), self.conf_loss / (iteration + 1)))
+            self.finish.emit('训练完成')
 
 
 

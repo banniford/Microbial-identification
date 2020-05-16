@@ -28,6 +28,7 @@ class fnc(QMainWindow):
         self.img = ""
         self.train_start = train()
         self.train_start.msg.connect(self.train_msg)
+        self.train_start.finish.connect(self.finish_train)
         self.main_ui.pushButton_7.clicked.connect(self.control)
         self.main_ui.pushButton_8.clicked.connect(self.close_control)
         self.main_ui.pushButton_9.clicked.connect(self.collect)
@@ -121,6 +122,16 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_17.setEnabled(False)
         self.main_ui.textEdit.append("正在退出......请稍等")
         self.train_start.flag=False
+
+    def finish_train(self,msg):
+        self.main_ui.pushButton_13.setEnabled(True)
+        self.main_ui.pushButton_14.setEnabled(True)
+        self.main_ui.pushButton_15.setEnabled(True)
+        self.main_ui.pushButton_18.setEnabled(True)
+        self.main_ui.pushButton_16.setEnabled(False)
+        self.main_ui.pushButton_17.setEnabled(False)
+        self.train_start.flag = False
+        self.main_ui.textEdit.append(msg)
 
 
     def predict_msg(self,msg):
