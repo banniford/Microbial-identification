@@ -100,6 +100,7 @@ class fnc(QMainWindow):
     def collect(self):
         self.conunt+=1
         self.Frame_img.save("neural_network/VOCdevkit/VOC2007/JPEGImages/%s.jpg"%(self.conunt))
+        self.main_ui.textEdit.append("成功保存图片至：neural_network/VOCdevkit/VOC2007/JPEGImages/%s.jpg"%(self.conunt))
 
 
     def structure(self):
@@ -183,6 +184,8 @@ class fnc(QMainWindow):
             self.main_ui.pushButton_4.setEnabled(True)
             self.main_ui.pushButton_5.setEnabled(True)
             self.main_ui.pushButton_6.setEnabled(True)
+            self.main_ui.pushButton_19.setEnabled(True)
+            self.main_ui.pushButton_20.setEnabled(True)
 
 
     def close_control(self):
@@ -193,6 +196,8 @@ class fnc(QMainWindow):
         self.main_ui.pushButton_4.setEnabled(False)
         self.main_ui.pushButton_5.setEnabled(False)
         self.main_ui.pushButton_6.setEnabled(False)
+        self.main_ui.pushButton_19.setEnabled(False)
+        self.main_ui.pushButton_20.setEnabled(False)
         # self.main_ui.label_2.setPixmap(QPixmap(None))
         # self.main_ui.label_2.setText("没有图像")
 
@@ -286,7 +291,7 @@ class fnc(QMainWindow):
 
 
     def open_image(self):
-        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png)")
+        Fname,_=QFileDialog.getOpenFileName(self,"打开文件",".","图像文件(*.jpg *.png *.jpeg)")
         self.main_ui.textEdit.append("图片路径为:"+Fname)
         if Fname != "":
             self.main_ui.label_3.setPixmap(QPixmap(Fname))
@@ -328,9 +333,13 @@ class fnc(QMainWindow):
 
     def check(self):
         # ！！！
-        voc()
-        self.main_ui.textEdit.append("校验完成")
-        self.main_ui.pushButton_16.setEnabled(True)
+        try:
+            voc()
+        except:
+            self.main_ui.textEdit.append("目录不存在，请检查文件结构")
+        else:
+            self.main_ui.textEdit.append("校验完成")
+            self.main_ui.pushButton_16.setEnabled(True)
 
 
 
