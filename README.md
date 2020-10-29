@@ -3,7 +3,7 @@
 
  Graduation project
 
-本人博客：www.paniford.com
+本人博客：paniford.com
 
 本项目主要使用arduino+Raspberry Pi 3B+deep learning（SSD网络）+python3 实现微生物图像识别。
 
