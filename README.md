@@ -108,8 +108,3 @@ python3 run.py
 
 
 
-## 致谢
-
-SSD目标检测网络详解b站up主 Bubbliiiing 视频链接：https://www.bilibili.com/video/BV1A7411976Z
-
-up主Blog：https://blog.csdn.net/weixin_44791964/article/list/1?t=1&orderby=UpdateTime
